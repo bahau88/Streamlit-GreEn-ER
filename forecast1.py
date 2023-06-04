@@ -7,7 +7,7 @@ from sklearn.metrics import r2_score
 import plotly.graph_objects as go
 
 # Load the data
-merged_df = pd.read_csv("https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020-2023.csv")
+merged_df = pd.read_csv("https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv")
 merged_df['Date'] = pd.to_datetime(merged_df['Date'])
 merged_df.set_index('Date', inplace=True)
 
