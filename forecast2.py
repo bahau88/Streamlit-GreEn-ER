@@ -15,7 +15,8 @@ def load_data():
 merged_df = load_data()
 
 # Convert the date and hour columns to datetime format
-# merged_df['Datetime'] = pd.to_datetime(merged_df['Datetime'])
+merged_df['Date'] = pd.to_datetime(merged_df['Date'])
+merged_df.set_index('Date', inplace=True)
 
 # Split the data into input (X) and output (Y) variables
 X = merged_df[['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility']].values
