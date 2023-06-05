@@ -10,6 +10,8 @@ from math import sqrt
 @st.cache  # Add caching for improved performance
 def load_data():
     merged_df = pd.read_csv("https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv")
+    merged_df['Date'] = pd.to_datetime(merged_df['Date'])
+    merged_df.set_index('Date', inplace=True)
     return merged_df
 
 merged_df = load_data()
