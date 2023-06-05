@@ -16,12 +16,16 @@ def load_data():
 merged_df = load_data()
 
 # Define the prediction function
-def predict_consumption(num_hours):
+def predict_consumption(num_hours, num_epochs, batch_size, variables):
     data = merged_df.copy()
     data.index.names = ['Datetime']
 
+    # Prepare selected variables
+    selected_variables = ['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility']
+    selected_variables = [var for var in selected_variables if var in variables]
+
     # Split the data into input (X) and output (Y) variables
-    X = data[['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility']].values
+    X = data[selected_variables].values
     Y = data['Consumption'].values
 
     # Normalize the input data
@@ -43,7 +47,7 @@ def predict_consumption(num_hours):
     val_Y = Y[-24:]
 
     # Train the model
-    model.fit(train_X, train_Y, epochs=2, batch_size=10, verbose=2, validation_data=(val_X, val_Y))
+    model.fit(train_X, train_Y, epochs=num_epochs, batch_size=batch_size, verbose=2, validation_data=(val_X, val_Y))
 
     # Generate the list of dates and hours to predict
     last_datetime = data.index.max()
@@ -64,9 +68,9 @@ def predict_consumption(num_hours):
         numberofroom = numberofroom_arr[i]
         dayindex = dayindex_arr[i]
         occupants = occupants_arr[i]
-        temperature =temperature_arr[i]
+        temperature = temperature_arr[i]
         cloudcover = cloudcover_arr[i]
-        visibility= visibility_arr[i]
+        visibility = visibility_arr[i]
         input_data[i] = [numberofroom, dayindex, occupants, temperature, cloudcover, visibility]
 
     input_data = (input_data - X_mean) / X_std
@@ -81,8 +85,12 @@ def predict_consumption(num_hours):
 # Create a Streamlit web app
 st.title('Energy Consumption Prediction')
 num_hours = st.slider('Select the number of hours ahead to predict', 1, 48, 24)
+num_epochs = st.slider('Select the number of epochs', 1, 10, 2)
+batch_size = st.slider('Select the batch size', 1, 20, 10)
+variables = st.multiselect('Select variables', ['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility'])
+
 predict_button = st.button('Predict')
 
 # Perform prediction on button click
 if predict_button:
-    predict_consumption(num_hours)
+    predict_consumption(num_hours, num_epochs, batch_size, variables)
