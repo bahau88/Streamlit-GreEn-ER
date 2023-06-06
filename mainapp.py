@@ -5,7 +5,46 @@ from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 import plotly.graph_objects as go
+import streamlit as st
+import plotly.graph_objects as go
+import pandas as pd
+from plotly.subplots import make_subplots
 
+
+# DATA VISUALIZATION #--------------------------------------------------------------------------------------------------------------------
+# Load the data
+merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv') 
+
+# Convert the date column to a datetime object
+merged_df['Date'] = pd.to_datetime(merged_df['Date'])
+
+# Create the figure and traces
+fig = go.Figure()
+
+fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Consumption'], name='Consumption',
+                         line=dict(color='red', width=2), visible=True))
+fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Other'], name='Other',
+                        line=dict(color='blue', width=2), yaxis='y2', visible=True))
+fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Heating'], name='Heating',
+                        line=dict(color='orange', width=2), yaxis='y3', visible=True))
+fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Lighting'], name='Lighting',
+                        line=dict(color='green', width=2), yaxis='y3', visible=True))
+
+# Set the axis titles
+fig.update_layout(
+    xaxis=dict(title='Date'),
+    yaxis=dict(title='Consumption', titlefont=dict(color='red')),
+    yaxis2=dict(title='Other', titlefont=dict(color='blue'), overlaying='y', side='right'),
+    yaxis3=dict(title='Heating', titlefont=dict(color='orange'), overlaying='y', side='right'),
+    yaxis4=dict(title='Lighting', titlefont=dict(color='green'), overlaying='y', side='right'),
+    plot_bgcolor='white'
+)
+
+# Add hover information
+fig.update_traces(hovertemplate='%{y:.2f}')
+
+#--------------------------------------------------------------------------------------------------------------------
+# FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
 # Load the data
 merged_df = pd.read_csv("https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv")
 
@@ -32,9 +71,11 @@ def plot_feature_importances(features, importances):
         xaxis=dict(tickangle=45)
     )
     st.plotly_chart(fig)
+    
+#--------------------------------------------------------------------------------------------------------------------
 
-# Page 1 - Home page
-def home_page():
+# Page 1 - Visualization page
+def importance_page():
     st.title("Energy Consumption Prediction")
     st.subheader("📊 Home")
     method = st.selectbox("Select Method", ["Random Forest", "Gradient Boosting", "Decision Tree"])
@@ -74,14 +115,24 @@ def contact_page():
 # Main app
 def main():
     st.sidebar.title("Navigation")
-    selected_page = st.sidebar.radio("Go to", ("Home", "About", "Contact"), index=0, format_func=lambda x: "📊 " + x)
+    selected_page = st.sidebar.radio(
+        "Go to",
+        [
+            ("Features Importance", "🏠"),
+            ("About", "ℹ️"),
+            ("Contact", "📞")
+        ],
+        index=0,
+        format_func=lambda x: x[1] + " " + x[0]
+    )
 
-    if selected_page == "Home":
-        home_page()
-    elif selected_page == "About":
+    if selected_page[0] == "Features Importance":
+        importance_page()
+    elif selected_page[0] == "About":
         about_page()
-    elif selected_page == "Contact":
+    elif selected_page[0] == "Contact":
         contact_page()
 
 if __name__ == "__main__":
     main()
+
