@@ -320,7 +320,7 @@ def forecast_page():
     st.subheader("📈 Neural Network")
     st.write("Neural network is flexible in terms of input features, since it allows to include a wide range of variables and handle large amounts of data efficiently. It is also capable of capturing complex nonlinear relationships between input variables and electricity consumption. Note: Try to decrease the number of epochs for fast computing (for example : 2, 5, or 10)")
     num_hours = st.slider('Select the number of hours ahead to predict', 1, 24, 12)
-    num_epochs = st.slider('Select the number of epochs', 1, 100, 50)
+    num_epochs = st.slider('Select the number of epochs', 1, 50, 5)
     batch_size = st.slider('Select the batch size', 5, 15, 10)
     variables = st.multiselect('Select the variables to use for prediction', ['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility'])
 
