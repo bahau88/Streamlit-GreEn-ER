@@ -1,6 +1,6 @@
 import streamlit as st
-from GreEn_ER.forecast1 import run_forecast1
-from GreEn_ER.forecast2 import run_forecast2
+from Streamlit_GreEn_ER.forecast1 import run_forecast1
+from Streamlit_GreEn_ER.forecast2 import run_forecast2
 
 PAGES = {
     "Forecast 1": run_forecast1,
