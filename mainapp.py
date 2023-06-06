@@ -36,7 +36,7 @@ def plot_feature_importances(features, importances):
 # Page 1 - Home page
 def home_page():
     st.title("Energy Consumption Prediction")
-    st.subheader("Home")
+    st.subheader("📊 Home")
     method = st.selectbox("Select Method", ["Random Forest", "Gradient Boosting", "Decision Tree"])
     test_size = st.slider("Select Test Size", 0.1, 0.4, step=0.1)
     
@@ -60,28 +60,29 @@ def home_page():
 # Page 2 - About page
 def about_page():
     st.title("Energy Consumption Prediction")
-    st.subheader("About")
+    st.subheader("📊 About")
     st.write("This is the about page.")
     # Add any additional content or functionality for this page
     
 # Page 3 - Contact page
 def contact_page():
     st.title("Energy Consumption Prediction")
-    st.subheader("Contact")
+    st.subheader("📊 Contact")
     st.write("This is the contact page.")
     # Add any additional content or functionality for this page
 
 # Main app
 def main():
     st.sidebar.title("Navigation")
-    selected_page = st.sidebar.radio("Go to", ("Home", "About", "Contact"))
+    selected_page = st.sidebar.beta_expander("Go to")
     
-    if selected_page == "📊 Home":
-        home_page()
-    elif selected_page == "About":
-        about_page()
-    elif selected_page == "Contact":
-        contact_page()
+    with selected_page:
+        if st.button("Home"):
+            home_page()
+        if st.button("About"):
+            about_page()
+        if st.button("Contact"):
+            contact_page()
 
 if __name__ == "__main__":
     main()
