@@ -33,67 +33,58 @@ def plot_feature_importances(features, importances):
     )
     st.plotly_chart(fig)
 
-# Define the page names and corresponding icons
-pages = {
-    "Home": "🏠",
-    "About": "ℹ️",
-    "Contact": "📞"
-}
+# Page 1 - Home page
+def home_page():
+    st.title("Energy Consumption Prediction")
+    st.subheader("Home")
+    method = st.selectbox("Select Method", ["Random Forest", "Gradient Boosting", "Decision Tree"])
+    test_size = st.slider("Select Test Size", 0.1, 0.4, step=0.1)
+    
+    if st.button("Train and Evaluate"):
+        X = merged_df[features]
+        y = merged_df[target]
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
+        
+        if method == "Random Forest":
+            model = RandomForestRegressor(n_estimators=100, random_state=42)
+        elif method == "Gradient Boosting":
+            model = GradientBoostingRegressor()
+        else:
+            model = DecisionTreeRegressor()
+        
+        trained_model, y_pred, r2 = train_and_evaluate_model(model, X_train, X_test, y_train, y_test)
+        
+        st.write("R2 score:", r2)
+        plot_feature_importances(features, trained_model.feature_importances_)
 
-# Function to get the current page
-def get_current_page():
-    query_params = st.experimental_get_query_params()
-    return query_params["page"][0] if "page" in query_params else "Home"
+# Page 2 - About page
+def about_page():
+    st.title("Energy Consumption Prediction")
+    st.subheader("About")
+    st.write("This is the about page.")
+    # Add any additional content or functionality for this page
+    
+# Page 3 - Contact page
+def contact_page():
+    st.title("Energy Consumption Prediction")
+    st.subheader("Contact")
+    st.write("This is the contact page.")
+    # Add any additional content or functionality for this page
 
 # Main app
 def main():
     st.sidebar.title("Navigation")
-    current_page = get_current_page()
+    selected_page = st.sidebar.radio("",
+                                     ("🏠 Home", "ℹ️ About", "📞 Contact"),
+                                     index=0,
+                                     format_func=lambda x: x.split(' ')[-1])
     
-    # Render tabs in sidebar
-    for page_name, icon in pages.items():
-        if current_page == page_name:
-            st.sidebar.markdown(f"**{icon} {page_name}**")
-        else:
-            st.sidebar.markdown(f"[{icon} {page_name}](?page={page_name})")
-    
-    st.sidebar.markdown("---")
-    
-    # Render content based on current page
-    if current_page == "Home":
-        st.title("Energy Consumption Prediction")
-        st.subheader("Home")
-        method = st.selectbox("Select Method", ["Random Forest", "Gradient Boosting", "Decision Tree"])
-        test_size = st.slider("Select Test Size", 0.1, 0.4, step=0.1)
-        
-        if st.button("Train and Evaluate"):
-            X = merged_df[features]
-            y = merged_df[target]
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
-            
-            if method == "Random Forest":
-                model = RandomForestRegressor(n_estimators=100, random_state=42)
-            elif method == "Gradient Boosting":
-                model = GradientBoostingRegressor()
-            else:
-                model = DecisionTreeRegressor()
-            
-            trained_model, y_pred, r2 = train_and_evaluate_model(model, X_train, X_test, y_train, y_test)
-            
-            st.write("R2 score:", r2)
-            plot_feature_importances(features, trained_model.feature_importances_)
-    
-    elif current_page == "About":
-        st.title("Energy Consumption Prediction")
-        st.subheader("About")
-        st.write("This is the about page.")
-        # Add any additional content or functionality for this page
-        
-    elif current_page == "Contact":
-        st.title("Energy Consumption Prediction")
-        st.subheader("Contact")
-        st.write("This is the contact page.")
-        # Add any additional content or functionality for this page
+    if selected_page == "Home":
+        home_page()
+    elif selected_page == "About":
+        about_page()
+    elif selected_page == "Contact":
+        contact_page()
 
 if __name__ == "__main__":
     main()
