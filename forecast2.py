@@ -4,6 +4,9 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense
 import plotly.graph_objects as go
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+from math import sqrt
+
 
 # Load the data
 @st.cache
@@ -15,7 +18,6 @@ def load_data():
 
 merged_df = load_data()
 
-# Define the prediction function
 def predict_consumption(num_hours, num_epochs, batch_size, variables):
     data = merged_df.copy()
     data.index.names = ['Datetime']
@@ -82,10 +84,30 @@ def predict_consumption(num_hours, num_epochs, batch_size, variables):
     for i in range(num_hours):
         st.write('Predicted consumption for {}: {:.2f}'.format(selected_datetimes[i], predictions[i][0]))
 
+    # Evaluate the model on the training set
+    rmse = sqrt(mean_squared_error(Y, model.predict(X)))
+    mse = mean_squared_error(Y, model.predict(X))
+    mae = mean_absolute_error(Y, model.predict(X))
+    r2 = r2_score(Y, model.predict(X))
+    st.write('RMSE: {:.2f}'.format(rmse))
+    st.write('MSE: {:.2f}'.format(mse))
+    st.write('MAE: {:.2f}'.format(mae))
+    st.write('R2 score: {:.2f}'.format(r2))
+
     # Plot the true consumption values and the corresponding predicted values
     train_predictions = model.predict(X)
     fig = plot_predictions(data, Y, train_predictions)
     st.plotly_chart(fig)
+
+    # Show the chart of the last three days and the predicted days
+    last_three_days = data.iloc[-72:]
+    predicted_days = pd.DataFrame(predictions, columns=['Consumption'], index=datetime_range)
+
+    fig_prediction = go.Figure()
+    fig_prediction.add_trace(go.Bar(x=last_three_days.index, y=last_three_days['Consumption'], name='Previous days'))
+    fig_prediction.add_trace(go.Bar(x=predicted_days.index, y=predicted_days['Consumption'], name='Predicted days'))
+    fig_prediction.update_layout(title='Electricity consumption forecast', plot_bgcolor='white', xaxis_title='Date', yaxis_title='Electricity consumption')
+    st.plotly_chart(fig_prediction)
 
 
 def plot_predictions(data, Y, train_predictions):
