@@ -102,6 +102,38 @@ def visualization_page():
     # Add the traces to the subplots
     fig_exogeneous.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Number of Room'], name='Number of Room',
                              line=dict(color='Coral', width=2), fill='tozeroy'), row=1, col=1)
+    fig_exogeneous.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Dayindex'], name='Dayindex',
+                         line=dict(color='orange', width=2), fill='tozeroy'), row=1, col=2)
+
+    fig_exogeneous.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Occupants'], name='Occupants',
+                             line=dict(color='Crimson', width=2), fill='tozeroy'), row=1, col=3)
+
+    fig_exogeneous.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Temperature'], name='Temperature',
+                             line=dict(color='blue', width=2), fill='tozeroy'), row=2, col=1)
+
+    fig_exogeneous.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Cloudcover'], name='Cloudcover',
+                             line=dict(color='DarkCyan', width=2), fill='tozeroy'), row=2, col=2)
+
+    fig_exogeneous.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Visibility'], name='Visibility',
+                             line=dict(color='purple', width=2), fill='tozeroy'), row=2, col=3)
+
+    # Set the axis titles
+    fig_exogeneous.update_xaxes(title_text='Date', row=1, col=1)
+    fig_exogeneous.update_yaxes(title_text='Number of Room', title_font=dict(color='Coral'), row=1, col=1)
+    fig_exogeneous.update_yaxes(title_text='Dayindex', title_font=dict(color='orange'), row=1, col=2)
+    fig_exogeneous.update_yaxes(title_text='Occupants', title_font=dict(color='Crimson'), row=1, col=3)
+    fig_exogeneous.update_yaxes(title_text='Temperature', title_font=dict(color='blue'), row=2, col=1)
+    fig_exogeneous.update_yaxes(title_text='Cloudcover', title_font=dict(color='DarkCyan'), row=2, col=2)
+    fig_exogeneous.update_yaxes(title_text='Visibility', title_font=dict(color='purple'), row=2, col=3)
+
+    # Add hover information
+    fig_exogeneous.update_traces(hovertemplate='%{y:.2f}')
+
+    # Update the layout
+    fig_exogeneous.update_layout(plot_bgcolor='white', showlegend=False)
+
+    # Show the figure
+    st.plotly_chart(fig_exogeneous)
         
 # Page 2 - Feature importance page
 def importance_page():
