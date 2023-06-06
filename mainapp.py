@@ -74,10 +74,7 @@ def contact_page():
 # Main app
 def main():
     st.sidebar.title("Navigation")
-    selected_page = st.sidebar.radio("",
-                                     ("🏠 Home", "ℹ️ About", "📞 Contact"),
-                                     index=0,
-                                     format_func=lambda x: x.split(' ')[-1])
+    selected_page = st.sidebar.radio("Go to", ("Home", "About", "Contact"))
     
     if selected_page == "Home":
         home_page()
