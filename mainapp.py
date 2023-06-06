@@ -33,12 +33,34 @@ def plot_feature_importances(features, importances):
     )
     st.plotly_chart(fig)
 
+# Define the page names and corresponding URLs
+pages = {
+    "Home": "/",
+    "About": "/about",
+    "Contact": "/contact"
+}
+
+# Define the default page and current page
+default_page = "Home"
+current_page = st.experimental_get_query_params().get("page", [default_page])[0]
+
 # Page 1 - Home page
-def home_page():
+if current_page == "Home":
     st.title("Energy Consumption Prediction")
-    st.subheader("Page 1: Home")
-    method = st.selectbox("Select Method", ["Random Forest", "Gradient Boosting", "Decision Tree"])
-    test_size = st.slider("Select Test Size", 0.1, 0.4, step=0.1)
+    st.sidebar.title("Navigation")
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("Pages")
+    
+    # Create links for each page
+    for page_name, page_url in pages.items():
+        if page_name == current_page:
+            st.sidebar.markdown(f"**{page_name}**")
+        else:
+            st.sidebar.markdown(f"[{page_name}]({page_url})")
+    
+    st.sidebar.markdown("---")
+    method = st.sidebar.selectbox("Select Method", ["Random Forest", "Gradient Boosting", "Decision Tree"])
+    test_size = st.sidebar.slider("Select Test Size", 0.1, 0.4, step=0.1)
     
     if st.button("Train and Evaluate"):
         X = merged_df[features]
@@ -58,31 +80,43 @@ def home_page():
         plot_feature_importances(features, trained_model.feature_importances_)
 
 # Page 2 - About page
-def about_page():
-    st.title("Energy Consumption Prediction")
-    st.subheader("Page 2: About")
-    st.write("This is the about page.")
-    # Add any additional content or functionality for this page
-    
-# Page 3 - Contact page
-def contact_page():
-    st.title("Energy Consumption Prediction")
-    st.subheader("Page 3: Contact")
-    st.write("This is the contact page.")
-    # Add any additional content or functionality for this page
-
-# Main navigation
-def main():
-    pages = {
-        "Home": home_page,
-        "About": about_page,
-        "Contact": contact_page
-    }
-    
+elif current_page == "About":
+    st.title("Energy Consumption Prediction - About")
     st.sidebar.title("Navigation")
-    selection = st.sidebar.radio("Go to", list(pages.keys()))
-    page = pages[selection]
-    page()
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("Pages")
+    
+    # Create links for each page
+    for page_name, page_url in pages.items():
+        if page_name == current_page:
+            st.sidebar.markdown(f"**{page_name}**")
+        else:
+            st.sidebar.markdown(f"[{page_name}]({page_url})")
+    
+    st.sidebar.markdown("---")
+    st.write("This is the About page.")
+    # Add any additional content or functionality for this page
 
-if __name__ == "__main__":
-    main()
+# Page 3 - Contact page
+elif current_page == "Contact":
+    st.title("Energy Consumption Prediction - Contact")
+    st.sidebar.title("Navigation")
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("Pages")
+    
+    # Create links for each page
+    for page_name, page_url in pages.items():
+        if page_name == current_page:
+            st.sidebar.markdown(f"**{page_name}**")
+        else:
+            st.sidebar.markdown(f"[{page_name}]({page_url})")
+    
+    st.sidebar.markdown("---")
+    st.write("This is the Contact page.")
+    # Add any additional content or functionality for this page
+
+# Handle page navigation
+if current_page not in pages.keys():
+    st.experimental_set_query_params(page=default_page)
+else:
+    st.experimental_set_query_params(page=current_page)
