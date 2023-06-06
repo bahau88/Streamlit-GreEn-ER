@@ -344,7 +344,6 @@ def contact_page():
 # Main app
 def main():
     # Set page title
-    st.set_page_config(page_title="GreEn-ER")
     st.sidebar.image("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEixIt_aFT2aA2Y_FUL6N1uAAX8CW-NdlNxP6BG-ggzuhCgMdzBzeQpYb5Wb6HqtlkSentBuKjIzIY-TtlR1TPnkFyh1jSrmwyKXgUzlw0aljCT-m1O44MFo8is_tIlg59JVf4biACzqIICfONNqicCIMvA1TQzl0QlVmzkgylnfiyNVf3As0Er8jMHK0w/s1600/download__1_-removebg-preview.png", use_column_width=True)
     st.sidebar.title("Navigation")
     selected_page = st.sidebar.radio(
