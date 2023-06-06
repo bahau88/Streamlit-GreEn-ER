@@ -317,7 +317,7 @@ def importance_page():
 # Page 3 - Forecast page
 def forecast_page():
     st.title('Energy Consumption Prediction')
-    st.subheader("📑 Neural Network")
+    st.subheader("📈 Neural Network")
     st.write("Neural network is flexible in terms of input features, since it allows to include a wide range of variables and handle large amounts of data efficiently. It is also capable of capturing complex nonlinear relationships between input variables and electricity consumption")
     num_hours = st.slider('Select the number of hours ahead to predict', 1, 24, 12)
     num_epochs = st.slider('Select the number of epochs', 1, 100, 50)
