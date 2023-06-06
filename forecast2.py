@@ -49,9 +49,6 @@ def predict_consumption(num_hours, num_epochs, batch_size, variables):
     # Train the model
     model.fit(train_X, train_Y, epochs=num_epochs, batch_size=batch_size, verbose=2, validation_data=(val_X, val_Y))
 
-    # Get the predictions for the training data
-    train_predictions = model.predict(X)
-
     # Generate the list of dates and hours to predict
     last_datetime = data.index.max()
     next_day = last_datetime + pd.DateOffset(hours=1)
@@ -86,18 +83,25 @@ def predict_consumption(num_hours, num_epochs, batch_size, variables):
         st.write('Predicted consumption for {}: {:.2f}'.format(selected_datetimes[i], predictions[i][0]))
 
     # Plot the true consumption values and the corresponding predicted values
+    train_predictions = model.predict(X)
     fig = plot_predictions(data, Y, train_predictions)
     st.plotly_chart(fig)
+
+def plot_predictions(data, y_true, y_pred):
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=data.index, y=y_true, name='True Consumption', line_color='orange'))
+    fig.add_trace(go.Scatter(x=data.index, y=y_pred.flatten(), name='Predicted Consumption', line_color='red'))
+    fig.update_layout(title='True vs. Predicted Consumption for Training Data',
+                      plot_bgcolor='white',
+                      xaxis_title='Date and Time', yaxis_title='Consumption')
+    return fig
 
 # Create a Streamlit web app
 st.title('Energy Consumption Prediction')
 num_hours = st.slider('Select the number of hours ahead to predict', 1, 48, 24)
 num_epochs = st.slider('Select the number of epochs', 1, 10, 2)
-batch_size = st.slider('Select the batch size', 1, 20, 10)
-variables = st.multiselect('Select variables', ['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility'])
+batch_size = st.slider('Select the batch size', 1, 128, 32)
+variables = st.multiselect('Select the variables to use for prediction', ['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility'])
 
-predict_button = st.button('Predict')
-
-# Perform prediction on button click
-if predict_button:
+if st.button('Predict'):
     predict_consumption(num_hours, num_epochs, batch_size, variables)
