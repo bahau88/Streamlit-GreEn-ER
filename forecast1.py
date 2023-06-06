@@ -36,7 +36,7 @@ def plot_feature_importances(features, importances):
     st.plotly_chart(fig)
 
 # Streamlit app
-st.title("Features Importance")
+st.title("Feature Importance")
 method = st.selectbox("Select Method", ["Random Forest", "Gradient Boosting", "Decision Tree"])
 test_size = st.slider("Select Test Size", 0.1, 0.4, step=0.1)
 
