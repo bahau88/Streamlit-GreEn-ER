@@ -85,7 +85,7 @@ def predict_consumption(num_hours, num_epochs, batch_size, variables):
     # Plot the true consumption values and the corresponding predicted values
     train_predictions = model.predict(X)
     fig = plot_predictions(data, Y, train_predictions)
-st.plotly_chart(fig)
+    st.plotly_chart(fig)
 
 
 def plot_predictions(data, Y, train_predictions):
