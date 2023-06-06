@@ -73,7 +73,36 @@ def plot_feature_importances(features, importances):
     st.plotly_chart(fig)
     
 #--------------------------------------------------------------------------------------------------------------------
-
+# Page 1 - Visualization page
+def visualization_page():
+    st.title('Data Visualization')
+    st.subheader("📊 Timeseries Data")
+    # Checkbox to select the data to show
+    selected_data = st.multiselect('Select data to show', ['Consumption', 'Other', 'Heating', 'Lighting', 'All'],
+                                   default=['All'])
+    # Filter the data based on the user's selection
+    if 'All' in selected_data:
+        selected_data = ['Consumption', 'Other', 'Heating', 'Lighting']
+    selected_traces = []
+    for data in selected_data:
+        if data == 'Consumption':
+            selected_traces.append(fig['data'][0])
+        elif data == 'Other':
+            selected_traces.append(fig['data'][1])
+        elif data == 'Heating':
+            selected_traces.append(fig['data'][2])
+        elif data == 'Lighting':
+            selected_traces.append(fig['data'][3])
+    # Update the figure with the selected traces
+    fig.update(data=selected_traces)
+    # Display the figure
+    st.plotly_chart(fig)
+    # Create the subplots
+    fig_exogeneous = make_subplots(rows=2, cols=3, subplot_titles=('Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility'))
+    # Add the traces to the subplots
+    fig_exogeneous.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Number of Room'], name='Number of Room',
+                             line=dict(color='Coral', width=2), fill='tozeroy'), row=1, col=1)
+        
 # Page 1 - Visualization page
 def importance_page():
     st.title("Energy Consumption Prediction")
@@ -118,6 +147,7 @@ def main():
     selected_page = st.sidebar.radio(
         "Go to",
         [
+            ("Data Visualization", "🏠"),
             ("Features Importance", "🏠"),
             ("About", "ℹ️"),
             ("Contact", "📞")
@@ -126,8 +156,10 @@ def main():
         format_func=lambda x: x[1] + " " + x[0]
     )
 
-    if selected_page[0] == "Features Importance":
-        importance_page()
+    if selected_page[0] == "Data Visualization":
+        visualization_page()
+    elif selected_page[0] == "Features Importance":
+        about_page()
     elif selected_page[0] == "About":
         about_page()
     elif selected_page[0] == "Contact":
