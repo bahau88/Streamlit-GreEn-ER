@@ -18,6 +18,7 @@ def load_data():
 
 merged_df = load_data()
 
+# Define the prediction function
 def predict_consumption(num_hours, num_epochs, batch_size, variables):
     data = merged_df.copy()
     data.index.names = ['Datetime']
@@ -49,7 +50,7 @@ def predict_consumption(num_hours, num_epochs, batch_size, variables):
     val_Y = Y[-24:]
 
     # Train the model
-    model.fit(train_X, train_Y, epochs=num_epochs, batch_size=batch_size, verbose=2, validation_data=(val_X, val_Y))
+    history = model.fit(train_X, train_Y, epochs=num_epochs, batch_size=batch_size, verbose=2, validation_data=(val_X, val_Y))
 
     # Generate the list of dates and hours to predict
     last_datetime = data.index.max()
@@ -84,30 +85,36 @@ def predict_consumption(num_hours, num_epochs, batch_size, variables):
     for i in range(num_hours):
         st.write('Predicted consumption for {}: {:.2f}'.format(selected_datetimes[i], predictions[i][0]))
 
-    # Evaluate the model on the training set
-    rmse = sqrt(mean_squared_error(Y, model.predict(X)))
-    mse = mean_squared_error(Y, model.predict(X))
-    mae = mean_absolute_error(Y, model.predict(X))
-    r2 = r2_score(Y, model.predict(X))
-    st.write('RMSE: {:.2f}'.format(rmse))
-    st.write('MSE: {:.2f}'.format(mse))
-    st.write('MAE: {:.2f}'.format(mae))
-    st.write('R2 score: {:.2f}'.format(r2))
-
     # Plot the true consumption values and the corresponding predicted values
     train_predictions = model.predict(X)
     fig = plot_predictions(data, Y, train_predictions)
     st.plotly_chart(fig)
 
-    # Show the chart of the last three days and the predicted days
-    last_three_days = data.iloc[-72:]
-    predicted_days = pd.DataFrame(predictions, columns=['Consumption'], index=datetime_range)
-
-    fig_prediction = go.Figure()
-    fig_prediction.add_trace(go.Bar(x=last_three_days.index, y=last_three_days['Consumption'], name='Previous days'))
-    fig_prediction.add_trace(go.Bar(x=predicted_days.index, y=predicted_days['Consumption'], name='Predicted days'))
-    fig_prediction.update_layout(title='Electricity consumption forecast', plot_bgcolor='white', xaxis_title='Date', yaxis_title='Electricity consumption')
-    st.plotly_chart(fig_prediction)
+    # Plot the training and validation loss
+    train_loss = history.history['loss']
+    val_loss = history.history['val_loss']
+    fig_tvl = go.Figure()
+    fig_tvl.add_trace(go.Scatter(
+        x=list(range(1, len(train_loss) + 1)),
+        y=train_loss,
+        mode='lines',
+        name='Training Loss'
+    ))
+    fig_tvl.add_trace(go.Scatter(
+        x=list(range(1, len(val_loss) + 1)),
+        y=val_loss,
+        mode='lines',
+        name='Validation Loss'
+    ))
+    fig_tvl.update_layout(
+        title='Training and Validation Loss',
+        plot_bgcolor='white',
+        xaxis_title='Epoch',
+        yaxis_title='Loss',
+        legend=dict(x=0.02, y=0.98),
+        margin=dict(l=40, r=20, t=60, b=40),
+    )
+    st.plotly_chart(fig_tvl)
 
 
 def plot_predictions(data, Y, train_predictions):
