@@ -85,16 +85,16 @@ def plot_feature_importances(features, importances):
 # Load the data
 @st.cache
 def load_data():
-    merged_df = pd.read_csv("https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv")
-    merged_df['Date'] = pd.to_datetime(merged_df['Date'])
-    merged_df.set_index('Date', inplace=True)
-    return merged_df
+    merged_df2 = pd.read_csv("https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv")
+    merged_df2['Date'] = pd.to_datetime(merged_df2['Date'])
+    merged_df2.set_index('Date', inplace=True)
+    return merged_df2
 
-merged_df = load_data()
+merged_df2 = load_data()
 
 # Define the prediction function
 def predict_consumption(num_hours, num_epochs, batch_size, variables):
-    data = merged_df.copy()
+    data = merged_df2.copy()
     data.index.names = ['Datetime']
 
     # Prepare selected variables
@@ -254,8 +254,9 @@ def visualization_page():
     # Add the traces to the subplots
     fig_exogeneous.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Number of Room'], name='Number of Room',
                              line=dict(color='Coral', width=2), fill='tozeroy'), row=1, col=1)
+    
     fig_exogeneous.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Dayindex'], name='Dayindex',
-                         line=dict(color='orange', width=2), fill='tozeroy'), row=1, col=2)
+                            line=dict(color='orange', width=2), fill='tozeroy'), row=1, col=2)
 
     fig_exogeneous.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Occupants'], name='Occupants',
                              line=dict(color='Crimson', width=2), fill='tozeroy'), row=1, col=3)
