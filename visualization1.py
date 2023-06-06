@@ -5,6 +5,7 @@ from plotly.subplots import make_subplots
 
 # Load the data
 merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv')  
+
 # Convert the date column to a datetime object
 merged_df['Date'] = pd.to_datetime(merged_df['Date'])
 
@@ -45,15 +46,9 @@ if 'All' in selected_data:
     selected_data = ['Consumption', 'Other', 'Heating', 'Lighting']
 
 selected_traces = []
-for data in selected_data:
-    if data == 'Consumption':
-        selected_traces.append(fig['data'][0])
-    elif data == 'Other':
-        selected_traces.append(fig['data'][1])
-    elif data == 'Heating':
-        selected_traces.append(fig['data'][2])
-    elif data == 'Lighting':
-        selected_traces.append(fig['data'][3])
+for trace_name in fig.data:
+    if trace_name.name in selected_data:
+        selected_traces.append(trace_name)
 
 # Update the figure with the selected traces
 fig.update(data=selected_traces)
