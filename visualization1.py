@@ -4,8 +4,7 @@ import pandas as pd
 from plotly.subplots import make_subplots
 
 # Load the data
-merged_df = pd.read_csv('your_data.csv')  # Replace 'your_data.csv' with your actual data file
-
+merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv')  
 # Convert the date column to a datetime object
 merged_df['Date'] = pd.to_datetime(merged_df['Date'])
 
