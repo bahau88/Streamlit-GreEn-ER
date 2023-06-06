@@ -85,7 +85,7 @@ def predict_consumption(num_hours, num_epochs, batch_size, variables):
     # Plot the true consumption values and the corresponding predicted values
     fig_tp = go.Figure()
     fig_tp.add_trace(go.Scatter(x=data.index, y=Y, name='True Consumption', line_color='orange'))
-    fig_tp.add_trace(go.Scatter(x=data.index, y=train_predictions.flatten(), name='Predicted Consumption', line_color='red'))
+    fig_tp.add_trace(go.Scatter(x=data.index, y=predictions.flatten(), name='Predicted Consumption', line_color='red'))
     fig_tp.update_layout(title='True vs. Predicted Consumption for Training Data',
                       plot_bgcolor='white',
                       xaxis_title='Date and Time', yaxis_title='Consumption')
