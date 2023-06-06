@@ -228,8 +228,8 @@ def plot_predictions(data, Y, train_predictions):
 # Page 1 - Visualization page
 def visualization_page():
     st.title('Data Visualization')
-    st.subheader("📊 Timeseries Data")
-    st.write("Below is the visualization data of the Gre")
+    st.subheader("📊 Time Series Data")
+    st.write("Below is the visualization data of the GreEn-ER dataset, combining the dataset of class schedule, weather, and electricity usage")
     # Checkbox to select the data to show
     selected_data = st.multiselect('Select data to show', ['Consumption', 'Other', 'Heating', 'Lighting', 'All'],
                                    default=['All'])
@@ -291,9 +291,9 @@ def visualization_page():
         
 # Page 2 - Feature importance page
 def importance_page():
-    st.title("Energy Consumption Prediction")
-    st.subheader("📊 Home")
-    st.write("This is the about page.")
+    st.title("Features Importance")
+    st.subheader("📑 ML Algorithms")
+    st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
     method = st.selectbox("Select Method", ["Random Forest", "Gradient Boosting", "Decision Tree"])
     test_size = st.slider("Select Test Size", 0.1, 0.4, step=0.1)
     
@@ -317,8 +317,8 @@ def importance_page():
 # Page 3 - Forecast page
 def forecast_page():
     st.title('Energy Consumption Prediction')
-    st.subheader("📊 About")
-    st.write("This is the about page.")
+    st.subheader("📑 Neural Network")
+    st.write("Neural network is flexible in terms of input features, since it allows to include a wide range of variables and handle large amounts of data efficiently. It is also capable of capturing complex nonlinear relationships between input variables and electricity consumption")
     num_hours = st.slider('Select the number of hours ahead to predict', 1, 24, 12)
     num_epochs = st.slider('Select the number of epochs', 1, 100, 50)
     batch_size = st.slider('Select the batch size', 5, 15, 10)
@@ -329,16 +329,20 @@ def forecast_page():
         
 # Page 4 - About page
 def about_page():
-    st.title("Energy Consumption Prediction")
-    st.subheader("📊 About")
+    st.title("About")
+    st.subheader("📈 MIAI Grenoble")
     st.write("This is the about page.")
     # Add any additional content or functionality for this page
     
 # Page 5 - Contact page
 def contact_page():
-    st.title("Energy Consumption Prediction")
-    st.subheader("📊 Contact")
-    st.write("This is the contact page.")
+    st.title("Contact")
+    st.subheader("👨‍🎓 Student")
+    st.write("Bahauddin Habibullah")
+    st.write("bahauddin-habibullah@grenoble-inp.org")
+    st.subheader("👨‍🏫 Supervisor")
+    st.write("Benoit Delinchant")
+    st.write("benoit.delinchant@grenoble-inp.fr")
     # Add any additional content or functionality for this page
 
 # Main app
@@ -347,14 +351,14 @@ def main():
     st.sidebar.image("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEixIt_aFT2aA2Y_FUL6N1uAAX8CW-NdlNxP6BG-ggzuhCgMdzBzeQpYb5Wb6HqtlkSentBuKjIzIY-TtlR1TPnkFyh1jSrmwyKXgUzlw0aljCT-m1O44MFo8is_tIlg59JVf4biACzqIICfONNqicCIMvA1TQzl0QlVmzkgylnfiyNVf3As0Er8jMHK0w/s1600/download__1_-removebg-preview.png", 
                  use_column_width=False, 
                  width=160)
-    st.sidebar.title("Navigation")
+    st.sidebar.title("GreEn-ER Electricity")
     selected_page = st.sidebar.radio(
         "Go to",
         [
             ("Data Visualization", "📊 "),
             ("Features Importance", "📑"),
             ("Electricity Forecast", "📈"),
-            ("About", "🏛"),
+            ("About", "🏙"),
             ("Contact", "📫")
         ],
         index=0,
