@@ -330,9 +330,13 @@ def forecast_page():
 # Page 4 - About page
 def about_page():
     st.title("About")
-    st.subheader("📈 MIAI Grenoble")
-    st.write("This is the about page.")
-    # Add any additional content or functionality for this page
+    st.subheader("🏛 MIAI Grenoble")
+    st.write("MIAI Grenoble Alpes (Multidisciplinary Institute in Artificial Intelligence) aims to conduct research in artificial intelligence at the highest level, to offer attractive courses for students and professionals of all levels, to support innovation in large companies, SMEs and startups and to inform and interact with citizens on all aspects of AI.")
+    st.subheader("🏛 Grenoble INP Ense3")
+    st.write("The École nationale supérieure de l'énergie, l'eau et l'environnement or Grenoble INP-Ense3 (pronounced enne-sé-cube) is one of the 204 French engineering schools that combines technical and scientific skills in the domains of electrical, mechanical, hydraulic, civil and environmental engineering to be able to handle the full energy chain (production, distribution, usages, trading) as well as the full water cycle (harnessing, storage, supply, treatment).")
+    st.subheader("🏛 G2Elab")
+    st.write("The G2Elab is a laboratory recognized nationally and internationally as a major player in the field of Electrical Engineering. Its activity covers a wide spectrum of research from electrical engineering materials, to component design and the study and management of complex systems such as power grids.")
+
     
 # Page 5 - Contact page
 def contact_page():
@@ -343,7 +347,7 @@ def contact_page():
     st.subheader("👨‍🏫 Supervisor")
     st.write("Benoit Delinchant")
     st.write("benoit.delinchant@grenoble-inp.fr")
-    # Add any additional content or functionality for this page
+
 
 # Main app
 def main():
@@ -358,7 +362,7 @@ def main():
             ("Data Visualization", "📊 "),
             ("Features Importance", "📑"),
             ("Electricity Forecast", "📈"),
-            ("About", "🏙"),
+            ("About", "🚀"),
             ("Contact", "📫")
         ],
         index=0,
