@@ -103,7 +103,7 @@ def visualization_page():
     fig_exogeneous.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Number of Room'], name='Number of Room',
                              line=dict(color='Coral', width=2), fill='tozeroy'), row=1, col=1)
         
-# Page 1 - Visualization page
+# Page 2 - Feature importance page
 def importance_page():
     st.title("Energy Consumption Prediction")
     st.subheader("📊 Home")
@@ -159,7 +159,7 @@ def main():
     if selected_page[0] == "Data Visualization":
         visualization_page()
     elif selected_page[0] == "Features Importance":
-        about_page()
+        importance_page()
     elif selected_page[0] == "About":
         about_page()
     elif selected_page[0] == "Contact":
