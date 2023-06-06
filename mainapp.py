@@ -74,15 +74,14 @@ def contact_page():
 # Main app
 def main():
     st.sidebar.title("Navigation")
-    selected_page = st.sidebar.beta_expander("Go to")
-    
-    with selected_page:
-        if st.button("Home"):
-            home_page()
-        if st.button("About"):
-            about_page()
-        if st.button("Contact"):
-            contact_page()
+    selected_page = st.sidebar.radio("Go to", ("Home", "About", "Contact"), index=0, format_func=lambda x: "📊 " + x)
+
+    if selected_page == "Home":
+        home_page()
+    elif selected_page == "About":
+        about_page()
+    elif selected_page == "Contact":
+        contact_page()
 
 if __name__ == "__main__":
     main()
