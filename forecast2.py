@@ -152,9 +152,9 @@ def plot_predictions(data, Y, train_predictions):
 
 # Create a Streamlit web app
 st.title('Energy Consumption Prediction')
-num_hours = st.slider('Select the number of hours ahead to predict', 1, 48, 24)
-num_epochs = st.slider('Select the number of epochs', 1, 10, 2)
-batch_size = st.slider('Select the batch size', 1, 128, 32)
+num_hours = st.slider('Select the number of hours ahead to predict', 1, 24, 12)
+num_epochs = st.slider('Select the number of epochs', 1, 100, 50)
+batch_size = st.slider('Select the batch size', 10, 20, 15)
 variables = st.multiselect('Select the variables to use for prediction', ['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility'])
 
 if st.button('Predict'):
