@@ -85,16 +85,21 @@ def predict_consumption(num_hours, num_epochs, batch_size, variables):
     # Plot the true consumption values and the corresponding predicted values
     train_predictions = model.predict(X)
     fig = plot_predictions(data, Y, train_predictions)
-    st.plotly_chart(fig)
+st.plotly_chart(fig)
 
-def plot_predictions(data, y_true, y_pred):
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(x=data.index, y=y_true, name='True Consumption', line_color='orange'))
-    fig.add_trace(go.Scatter(x=data.index, y=y_pred.flatten(), name='Predicted Consumption', line_color='red'))
-    fig.update_layout(title='True vs. Predicted Consumption for Training Data',
-                      plot_bgcolor='white',
-                      xaxis_title='Date and Time', yaxis_title='Consumption')
-    return fig
+
+def plot_predictions(data, Y, train_predictions):
+    fig_tp = go.Figure()
+    fig_tp.add_trace(go.Scatter(x=data.index, y=Y, name='True Consumption', line_color='orange'))
+    fig_tp.add_trace(go.Scatter(x=data.index, y=train_predictions.flatten(), name='Predicted Consumption', line_color='red'))
+    fig_tp.update_layout(
+        title='True vs. Predicted Consumption for Training Data',
+        plot_bgcolor='white',
+        xaxis_title='Date and Time',
+        yaxis_title='Consumption'
+    )
+    return fig_tp
+
 
 # Create a Streamlit web app
 st.title('Energy Consumption Prediction')
