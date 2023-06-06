@@ -229,6 +229,7 @@ def plot_predictions(data, Y, train_predictions):
 def visualization_page():
     st.title('Data Visualization')
     st.subheader("📊 Timeseries Data")
+    st.write("Below is the visualization data of the Gre")
     # Checkbox to select the data to show
     selected_data = st.multiselect('Select data to show', ['Consumption', 'Other', 'Heating', 'Lighting', 'All'],
                                    default=['All'])
@@ -292,6 +293,7 @@ def visualization_page():
 def importance_page():
     st.title("Energy Consumption Prediction")
     st.subheader("📊 Home")
+    st.write("This is the about page.")
     method = st.selectbox("Select Method", ["Random Forest", "Gradient Boosting", "Decision Tree"])
     test_size = st.slider("Select Test Size", 0.1, 0.4, step=0.1)
     
@@ -315,9 +317,11 @@ def importance_page():
 # Page 3 - Forecast page
 def forecast_page():
     st.title('Energy Consumption Prediction')
+    st.subheader("📊 About")
+    st.write("This is the about page.")
     num_hours = st.slider('Select the number of hours ahead to predict', 1, 24, 12)
     num_epochs = st.slider('Select the number of epochs', 1, 100, 50)
-    batch_size = st.slider('Select the batch size', 10, 20, 15)
+    batch_size = st.slider('Select the batch size', 5, 15, 10)
     variables = st.multiselect('Select the variables to use for prediction', ['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility'])
 
     if st.button('Predict'):
@@ -343,11 +347,11 @@ def main():
     selected_page = st.sidebar.radio(
         "Go to",
         [
-            ("Data Visualization", "🏠"),
-            ("Features Importance", "🏠"),
-          ("Electricity Forecast", "🏠"),
-            ("About", "ℹ️"),
-            ("Contact", "📞")
+            ("Data Visualization", "📊 "),
+            ("Features Importance", "📑"),
+            ("Electricity Forecast", "📈"),
+            ("About", "🏫"),
+            ("Contact", "📫")
         ],
         index=0,
         format_func=lambda x: x[1] + " " + x[0]
