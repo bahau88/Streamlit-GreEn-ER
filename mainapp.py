@@ -76,7 +76,7 @@ def main():
     st.sidebar.title("Navigation")
     selected_page = st.sidebar.radio("Go to", ("Home", "About", "Contact"))
     
-    if selected_page == "Home":
+    if selected_page == "📊 Home":
         home_page()
     elif selected_page == "About":
         about_page()
