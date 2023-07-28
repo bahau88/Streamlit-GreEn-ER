@@ -22,32 +22,29 @@ from math import sqrt
 # DATA VISUALIZATION #--------------------------------------------------------------------------------------------------------------------
 # Load the data
 merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv') 
-df = merged_df.copy
+
 # Convert the date column to a datetime object
-#df['Date'] = pd.to_datetime(df['Date'])
-
-# Convert Date column to datetime format
-df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d %H:%M')
-
-# Format the Date column to "2016-01-01 04:00"
-df['Date'] = df['Date'].dt.strftime('%Y-%m-%d %H:%M')
+merged_df['Date'] = pd.to_datetime(merged_df['Date'])
 
 # Create the figure and traces
 fig = go.Figure()
 
-fig.add_trace(go.Scatter(x=df['Date'], y=df['Consumption'], name='Consumption',
+fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Consumption'], name='Consumption',
                          line=dict(color='red', width=2), visible=True))
-fig.add_trace(go.Scatter(x=df['Date'], y=df['Other'], name='Other',
-                        line=dict(color='blue', width=2), visible=True))
-fig.add_trace(go.Scatter(x=df['Date'], y=df['Heating'], name='Heating',
-                        line=dict(color='orange', width=2), visible=True))
-fig.add_trace(go.Scatter(x=df['Date'], y=df['Lighting'], name='Lighting',
-                        line=dict(color='green', width=2), visible=True))
+fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Other'], name='Other',
+                        line=dict(color='blue', width=2), yaxis='y2', visible=True))
+fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Heating'], name='Heating',
+                        line=dict(color='orange', width=2), yaxis='y3', visible=True))
+fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Lighting'], name='Lighting',
+                        line=dict(color='green', width=2), yaxis='y3', visible=True))
 
 # Set the axis titles
 fig.update_layout(
     xaxis=dict(title='Date'),
-    yaxis=dict(title='Consumption', titlefont=dict(color='black')),
+    yaxis=dict(title='Consumption', titlefont=dict(color='red')),
+    yaxis2=dict(title='Other', titlefont=dict(color='blue'), overlaying='y', side='right'),
+    yaxis3=dict(title='Heating', titlefont=dict(color='orange'), overlaying='y', side='right'),
+    yaxis4=dict(title='Lighting', titlefont=dict(color='green'), overlaying='y', side='right'),
     plot_bgcolor='white'
 )
 
