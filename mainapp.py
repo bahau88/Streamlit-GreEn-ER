@@ -26,6 +26,12 @@ df = merged_df.copy
 # Convert the date column to a datetime object
 #df['Date'] = pd.to_datetime(df['Date'])
 
+# Convert Date column to datetime format
+df['Date'] = pd.to_datetime(df['Date'], format='%Y-%m-%d %H:%M')
+
+# Format the Date column to "2016-01-01 04:00"
+df['Date'] = df['Date'].dt.strftime('%Y-%m-%d %H:%M')
+
 # Create the figure and traces
 fig = go.Figure()
 
