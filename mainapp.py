@@ -24,27 +24,24 @@ from math import sqrt
 merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv') 
 
 # Convert the date column to a datetime object
-merged_df['Date'] = pd.to_datetime(merged_df['Date'])
+df['Date'] = pd.to_datetime(df['Date'])
 
 # Create the figure and traces
 fig = go.Figure()
 
-fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Consumption'], name='Consumption',
+fig.add_trace(go.Scatter(x=df['Date'], y=df['Consumption'], name='Consumption',
                          line=dict(color='red', width=2), visible=True))
-fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Other'], name='Other',
-                        line=dict(color='blue', width=2), yaxis='y2', visible=True))
-fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Heating'], name='Heating',
-                        line=dict(color='orange', width=2), yaxis='y3', visible=True))
-fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Lighting'], name='Lighting',
-                        line=dict(color='green', width=2), yaxis='y3', visible=True))
+fig.add_trace(go.Scatter(x=df['Date'], y=df['Other'], name='Other',
+                        line=dict(color='blue', width=2), visible=True))
+fig.add_trace(go.Scatter(x=df['Date'], y=df['Heating'], name='Heating',
+                        line=dict(color='orange', width=2), visible=True))
+fig.add_trace(go.Scatter(x=df['Date'], y=df['Lighting'], name='Lighting',
+                        line=dict(color='green', width=2), visible=True))
 
 # Set the axis titles
 fig.update_layout(
     xaxis=dict(title='Date'),
-    yaxis=dict(title='Consumption', titlefont=dict(color='red')),
-    yaxis2=dict(title='Other', titlefont=dict(color='blue'), overlaying='y', side='right'),
-    yaxis3=dict(title='Heating', titlefont=dict(color='orange'), overlaying='y', side='right'),
-    yaxis4=dict(title='Lighting', titlefont=dict(color='green'), overlaying='y', side='right'),
+    yaxis=dict(title='Consumption', titlefont=dict(color='black')),
     plot_bgcolor='white'
 )
 
