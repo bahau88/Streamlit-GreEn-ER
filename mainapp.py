@@ -47,7 +47,6 @@ fig.update_layout(
     yaxis4=dict(title='Lighting', titlefont=dict(color='green'), overlaying='y', side='right'),
     plot_bgcolor='white'
 )
-)
 
 # Add hover information
 fig.update_traces(hovertemplate='%{y:.2f}')
