@@ -41,8 +41,12 @@ fig.add_trace(go.Scatter(x=merged_df['Date'], y=merged_df['Lighting'], name='Lig
 # Set the axis titles
 fig.update_layout(
     xaxis=dict(title='Date'),
-    yaxis=dict(title='Consumption', titlefont=dict(color='black')),
+    yaxis=dict(title='Consumption', titlefont=dict(color='red')),
+    yaxis2=dict(title='Other', titlefont=dict(color='blue'), overlaying='y', side='right'),
+    yaxis3=dict(title='Heating', titlefont=dict(color='orange'), overlaying='y', side='right'),
+    yaxis4=dict(title='Lighting', titlefont=dict(color='green'), overlaying='y', side='right'),
     plot_bgcolor='white'
+)
 )
 
 # Add hover information
