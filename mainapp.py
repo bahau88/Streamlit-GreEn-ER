@@ -338,44 +338,26 @@ def analysis_page():
 
 # Page 3 - Linear Regression
 def regression_page():
-  st.title("Linear Regression Plots with Streamlit")
-
-# Select the columns to be plotted
-selected_columns = st.multiselect("Select columns to plot", merged_df.columns)
-
-if len(selected_columns) < 2:
-    st.warning("Please select at least 2 columns to plot.")
-else:
-    # Create a 2x2 matrix of subplots
-    fig = make_subplots(rows=len(selected_columns)//3 + 1, cols=3, subplot_titles=selected_columns)
-
-    # Loop through selected columns and create scatter plots with linear regression lines
-    for i, col in enumerate(selected_columns):
-        x = merged_df['Consumption']
-        y = merged_df[col]
-
-        slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
-        line = slope * x + intercept
-        corr_text = f"Correlation: {r_value:.2f}"
-
-        row = i // 3 + 1
-        col = i % 3 + 1
-
-        fig.add_trace(go.Scatter(x=x, y=y, mode='markers'), row=row, col=col)
-        fig.add_trace(go.Scatter(x=x, y=line, mode='lines', line=dict(color='red')), row=row, col=col)
-        fig.update_xaxes(title_text="Consumption", row=row, col=col)
-        fig.update_yaxes(title_text=col, row=row, col=col)
-        fig.add_annotation(text=corr_text, xref="paper", yref="paper", x=0.1 + col * 0.4, y=1 - row * 0.3,
-                           showarrow=False, font=dict(size=12), align="left")
-
-    # Update layout and axes properties
-    fig.update_layout(
-        width=1400,  # set width of the plot
-        height=600 * (len(selected_columns)//3 + 1),  # set height of the plot
-    )
-
-    # Display the plot using Streamlit
-    st.plotly_chart(fig)
+  # Title of the web app
+  st.title("Data Visualization with Streamlit")
+  
+  # Sidebar to select data for visualization
+  selected_data = st.sidebar.selectbox("Select Data for Visualization", merged_df.columns)
+  
+  # Scatter plot and regression line
+  fig = px.scatter(merged_df, x='Consumption', y=selected_data, trendline="ols", title=f"Consumption vs {selected_data}")
+  st.plotly_chart(fig)
+  
+  # Display correlation coefficient
+  slope, intercept, r_value, p_value, std_err = stats.linregress(merged_df['Consumption'], merged_df[selected_data])
+  corr_text = f"Correlation: {r_value:.2f}"
+  st.text(corr_text)
+  
+  # Show data table
+  st.write(merged_df)
+  
+  # Update layout and axes properties
+  st.set_page_config(layout="wide")
   
 
 # Page 2 - Feature importance page
