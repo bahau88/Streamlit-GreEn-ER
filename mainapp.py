@@ -334,6 +334,8 @@ def analysis_page():
 
   st.subheader("📈 Consumption Distribution by Month")
   st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
+  merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv')
+  merged_df['Date'] = pd.to_datetime(merged_df['Date'])
   merged_df['Month'] = merged_df['Date'].dt.month_name()
   fig_monthly = px.box(merged_df, x='Month', y='Consumption', boxmode='overlay',
                        category_orders={'Month': ['January', 'February', 'March', 'April', 'May', 'June',
