@@ -466,7 +466,7 @@ def main():
         visualization_page()
     elif selected_page[0] == "Consumption Analysis":
         analysis_page() 
-    elif selected_page[0] == "Consumption Analysis":
+    elif selected_page[0] == "Linear Regression":
         regression_page() 
     elif selected_page[0] == "Features Importance":
         importance_page()
