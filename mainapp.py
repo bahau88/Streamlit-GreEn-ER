@@ -367,7 +367,7 @@ def analysis_page():
   st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
   # Call the function and display the plot using Streamlit
   fig_monthly = create_monthly_consumption_boxplot(merged_df)
-  st.plotly_chart(fig)monthly, use_container_width=True)
+  st.plotly_chart(fig_monthly, use_container_width=True)
         
 # Page 2 - Feature importance page
 def importance_page():
