@@ -328,7 +328,7 @@ def analysis_page():
   st.subheader("📑 Consumption Distribution by Season")
   st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
   st.title("Data Analysis with Plotly and Streamlit")
-  st.plotly_chart(fig)
+  st.plotly_chart(fig_box)
 
 
 # Page 2 - Feature importance page
