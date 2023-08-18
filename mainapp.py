@@ -74,7 +74,7 @@ def create_box_plots(df, title, color):
         showlegend=False
     )
     
-    return fig_season
+    #return fig_season
 
 # Convert to datetime data type
 merged_df['Date'] = pd.to_datetime(merged_df['Date'])
@@ -97,22 +97,6 @@ df_autumn = pd.concat([df_boxplot['2020-09-01':'2020-11-30'],
 df_winter = pd.concat([df_boxplot['2020-12-01':'2020-12-31'],
                        df_boxplot['2021-12-01':'2021-12-31'],
                        df_boxplot['2022-12-01':'2023-02-28']])
-
-
-def create_monthly_consumption_boxplot(df):
-    fig_monthly = px.box(df, x='Month', y='Consumption', boxmode='overlay',
-                 category_orders={'Month': ['January', 'February', 'March', 'April', 'May', 'June',
-                                            'July', 'August', 'September', 'October', 'November', 'December']})
-    fig_monthly.update_traces(marker_color='blue')
-    fig_monthly.update_layout(
-        xaxis_title='Month',
-        yaxis_title='Consumption',
-        plot_bgcolor='white',
-        width=1400,
-        height=500,
-        font=dict(size=16)
-    )
-    return fig_monthly
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
@@ -365,9 +349,7 @@ def analysis_page():
   st.plotly_chart(create_box_plots(df_winter, 'Winter', 'green'), use_container_width=True)
   st.subheader("📑 Consumption Distribution by Month")
   st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
-  # Call the function and display the plot using Streamlit
-  fig_monthly = create_monthly_consumption_boxplot(merged_df)
-  st.plotly_chart(fig_monthly, use_container_width=True)
+
         
 # Page 2 - Feature importance page
 def importance_page():
