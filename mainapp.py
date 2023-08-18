@@ -84,6 +84,44 @@ def create_box_plot(df, season_name, color):
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 # LINEAR REGRESSION #--------------------------------------------------------------------------------------------------------------------
 merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv')
+# Create a 1x1 matrix of subplots
+fig = make_subplots(rows=8, cols=1, vertical_spacing=0.15)
+
+# List of column pairs to plot
+columns = [
+    ('Number of Room', 'Consumption'),
+    ('Events', 'Consumption'),
+    ('Dayindex', 'Consumption'),
+    ('Occupants', 'Consumption'),
+    ('Temperature', 'Consumption'),
+    ('Cloudcover', 'Consumption'),
+    ('Visibility', 'Consumption'),
+    ('Solarradiation', 'Consumption')
+]
+
+for i, (y_col, x_col) in enumerate(columns, start=1):
+    x = merged_df[x_col]
+    y = merged_df[y_col]
+    
+    # Calculate linear regression
+    slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+    line = slope * x + intercept
+    corr_text = f"Correlation: {r_value:.2f}"
+    
+    # Add scatter plot and regression line
+    fig.add_trace(go.Scatter(x=x, y=y, mode='markers', name=y_col))
+    fig.add_trace(go.Scatter(x=x, y=line, mode='lines', line=dict(color='red'), name='Regression'))
+    
+    # Set titles and annotations
+    fig.update_xaxes(title_text="Consumption", row=i, col=1)
+    fig.update_yaxes(title_text=y_col, row=i, col=1)
+    fig.add_annotation(text=corr_text, xref="paper", yref="paper", x=0.1, y=0.9, showarrow=False, font=dict(size=12), align="left")
+
+# Update layout and axes properties
+fig.update_layout(
+    width=800,  # set width of the plot
+    height=2400,  # set height of the plot
+)
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
@@ -329,12 +367,10 @@ def analysis_page():
   st.title('Energy Consumption Analysis')
   st.subheader("📑 Consumption Distribution by Season")
   st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
-  for season_name, date_ranges in seasons.items():
-      df_season = pd.concat([df_boxplot[(df_boxplot.index >= start_date) & (df_boxplot.index <= end_date)]
-                             for start_date, end_date in date_ranges])
-      
-      st.plotly_chart(create_box_plot(df_season, season_name, 
-                                       'red' if season_name == 'Spring' else 'blue' if season_name == 'Summer' else 'orange' if season_name == 'Autumn' else 'green'), use_container_width=True)
+  st.title("Data Analysis with Plotly and Streamlit")
+  st.plotly_chart(fig)
+
+
 
 # Page 3 - Linear Regression
 def regression_page():
