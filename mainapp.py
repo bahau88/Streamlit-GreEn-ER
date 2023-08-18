@@ -82,6 +82,10 @@ def create_box_plot(df, season_name, color):
     return fig_box
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------
+# LINEAR REGRESSION #--------------------------------------------------------------------------------------------------------------------
+merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv')
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
 # Load the data
 merged_df = pd.read_csv("https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv")
@@ -332,6 +336,45 @@ def analysis_page():
       st.plotly_chart(create_box_plot(df_season, season_name, 
                                        'red' if season_name == 'Spring' else 'blue' if season_name == 'Summer' else 'orange' if season_name == 'Autumn' else 'green'), use_container_width=True)
 
+# Page 3 - Linear Regression
+def regression_page():
+  # Create Streamlit app
+  st.title('Energy Consumption Analysis')
+  st.subheader('Correlation between Consumption and Other Variables')
+  
+  # Select the columns to be plotted
+  columns = ['Number of Room', 'Events', 'Dayindex', 'Occupants', 
+             'Temperature', 'Cloudcover', 'Visibility', 'Solarradiation']
+  
+  # Create a 3x3 matrix of subplots
+  fig = make_subplots(rows=3, cols=3, subplot_titles=columns, shared_xaxes=True)
+  
+  for idx, col in enumerate(columns, start=1):
+      x = merged_df['Consumption']
+      y = merged_df[col]
+      
+      slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+      line = slope * x + intercept
+      corr_text = f"Correlation: {r_value:.2f}"
+      
+      row = (idx - 1) // 3 + 1
+      col = (idx - 1) % 3 + 1
+      
+      fig.add_trace(go.Scatter(x=x, y=y, mode='markers'), row=row, col=col)
+      fig.add_trace(go.Scatter(x=x, y=line, mode='lines', line=dict(color='red')), row=row, col=col)
+      fig.update_xaxes(title_text="Consumption", row=row, col=col)
+      fig.update_yaxes(title_text=col, row=row, col=col)
+      fig.add_annotation(text=corr_text, xref="paper", yref="paper", x=0.15, y=0.95, showarrow=False)
+  
+  # Update layout and axes properties
+  fig.update_layout(
+      width=1000,  # set width of the plot
+      height=800,  # set height of the plot
+  )
+  
+  # Display the plot using st.plotly_chart
+  st.plotly_chart(fig, use_container_width=True)
+  
 
 # Page 2 - Feature importance page
 def importance_page():
@@ -423,6 +466,8 @@ def main():
         visualization_page()
     elif selected_page[0] == "Consumption Analysis":
         analysis_page() 
+    elif selected_page[0] == "Consumption Analysis":
+        regression_page() 
     elif selected_page[0] == "Features Importance":
         importance_page()
     elif selected_page[0] == "Electricity Forecast FNN":
