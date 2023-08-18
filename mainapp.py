@@ -9,6 +9,7 @@ import streamlit as st
 import plotly.graph_objects as go
 import pandas as pd
 from plotly.subplots import make_subplots
+from scipy import stats
 import streamlit as st
 import pandas as pd
 import numpy as np
