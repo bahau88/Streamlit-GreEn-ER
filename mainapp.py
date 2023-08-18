@@ -338,61 +338,44 @@ def analysis_page():
 
 # Page 3 - Linear Regression
 def regression_page():
-  st.title("Data Visualization with Linear Regression")
+  st.title("Linear Regression Plots with Streamlit")
 
-    # Simulated data for demonstration purposes
-    np.random.seed(42)
-    merged_df = {
-        'Consumption': np.random.rand(100),
-        'Number of Room': np.random.rand(100),
-        'Events': np.random.rand(100),
-        'Dayindex': np.random.rand(100),
-        'Occupants': np.random.rand(100),
-        'Temperature': np.random.rand(100),
-        'Cloudcover': np.random.rand(100),
-        'Visibility': np.random.rand(100),
-        'Solarradiation': np.random.rand(100)
-    }
+# Select the columns to be plotted
+selected_columns = st.multiselect("Select columns to plot", merged_df.columns)
 
+if len(selected_columns) < 2:
+    st.warning("Please select at least 2 columns to plot.")
+else:
     # Create a 2x2 matrix of subplots
-    fig_regression = make_subplots(rows=4, cols=2, subplot_titles=("Consumption vs Number of Room", "Consumption vs Events",
-                                                        "Consumption vs Day Index", "Consumption vs Occupants",
-                                                        "Consumption vs Temperature", "Consumption vs Cloud Cover",
-                                                        "Consumption vs Visibility", "Consumption vs Solar Radiation"))
+    fig = make_subplots(rows=len(selected_columns)//3 + 1, cols=3, subplot_titles=selected_columns)
 
-    for i, (y_column, subplot_title) in enumerate([('Number of Room', "Consumption vs Number of Room"),
-                                                   ('Events', "Consumption vs Events"),
-                                                   ('Dayindex', "Consumption vs Day Index"),
-                                                   ('Occupants', "Consumption vs Occupants"),
-                                                   ('Temperature', "Consumption vs Temperature"),
-                                                   ('Cloudcover', "Consumption vs Cloud Cover"),
-                                                   ('Visibility', "Consumption vs Visibility"),
-                                                   ('Solarradiation', "Consumption vs Solar Radiation")], start=1):
-
+    # Loop through selected columns and create scatter plots with linear regression lines
+    for i, col in enumerate(selected_columns):
         x = merged_df['Consumption']
-        y = merged_df[y_column]
+        y = merged_df[col]
 
-        # Calculate the linear regression line for each plot and the correlation coefficient (r-value)
-        slope, intercept, r_value, _, _ = stats.linregress(x, y)
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
         line = slope * x + intercept
         corr_text = f"Correlation: {r_value:.2f}"
 
-        # Plot the scatter plot and add the linear regression line
-        fig_regression.add_trace(go.Scatter(x=x, y=y, mode='markers'), row=i, col=1)
-        fig_regression.add_trace(go.Scatter(x=x, y=line, mode='lines', line=dict(color='red')), row=i, col=1)
-        fig_regression.update_xaxes(title_text="Consumption", row=i, col=1)
-        fig_regression.update_yaxes(title_text=y_column, row=i, col=1)
-        fig_regression.add_annotation(text=corr_text, xref="paper", yref="paper", x=0.1, y=1 - i * 0.25, showarrow=False)
+        row = i // 3 + 1
+        col = i % 3 + 1
+
+        fig.add_trace(go.Scatter(x=x, y=y, mode='markers'), row=row, col=col)
+        fig.add_trace(go.Scatter(x=x, y=line, mode='lines', line=dict(color='red')), row=row, col=col)
+        fig.update_xaxes(title_text="Consumption", row=row, col=col)
+        fig.update_yaxes(title_text=col, row=row, col=col)
+        fig.add_annotation(text=corr_text, xref="paper", yref="paper", x=0.1 + col * 0.4, y=1 - row * 0.3,
+                           showarrow=False, font=dict(size=12), align="left")
 
     # Update layout and axes properties
-    fig_regression.update_layout(
-        width=1000,  # set width of the plot
-        height=1400,  # set height of the plot
-        showlegend=False
+    fig.update_layout(
+        width=1400,  # set width of the plot
+        height=600 * (len(selected_columns)//3 + 1),  # set height of the plot
     )
 
-    # Convert the Plotly figure to a Streamlit figure
-    st.plotly_chart(fig_regression, use_container_width=True)
+    # Display the plot using Streamlit
+    st.plotly_chart(fig)
   
 
 # Page 2 - Feature importance page
