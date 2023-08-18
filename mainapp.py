@@ -332,7 +332,26 @@ def analysis_page():
       st.plotly_chart(create_box_plot(df_season, season_name, 
                                        'red' if season_name == 'Spring' else 'blue' if season_name == 'Summer' else 'orange' if season_name == 'Autumn' else 'green'), use_container_width=True)
 
-        
+  st.subheader("📈 Consumption Distribution by Month")
+  st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
+  merged_df['Month'] = merged_df['Date'].dt.month_name()
+  fig_monthly = px.box(merged_df, x='Month', y='Consumption', boxmode='overlay',
+                       category_orders={'Month': ['January', 'February', 'March', 'April', 'May', 'June',
+                                                  'July', 'August', 'September', 'October', 'November', 'December']})
+  fig_monthly.update_traces(marker_color='blue')
+  fig_monthly.update_layout(
+      title='Distribution of Consumption by Month',
+      xaxis_title='Month',
+      plot_bgcolor='white',
+      width=1400,
+      height=500,
+      font=dict(size=16),
+      yaxis_title='Consumption'
+  )
+  
+  st.plotly_chart(fig_monthly)
+
+
 # Page 2 - Feature importance page
 def importance_page():
     st.title("Features Importance")
