@@ -57,7 +57,7 @@ merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy
 
 # Convert to datetime data type
 merged_df['Date'] = pd.to_datetime(merged_df['Date'])
-merged_df['Month'] = merged_df['Date'].dt.month_name()
+#merged_df['Month'] = merged_df['Date'].dt.month_name()
 
 # Create subplots for each season
 def create_box_plots(df, title, color):
