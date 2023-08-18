@@ -337,25 +337,7 @@ def analysis_page():
 
 # Page 3 - Linear Regression
 def regression_page():
-  # Title of the web app
-  st.title("Data Visualization with Streamlit")
-  
-  # Sidebar to select data for visualization
-  selected_data = st.sidebar.selectbox("Select Data for Y-axis", merged_df.columns)
-  
-  # Scatter plot and regression line
-  fig = px.scatter(merged_df, x='Consumption', y=selected_data, title=f"Consumption vs {selected_data}")
-  slope, intercept, r_value, p_value, std_err = stats.linregress(merged_df['Consumption'], merged_df[selected_data])
-  corr_text = f"Correlation: {r_value:.2f}"
-  fig.add_scatter(x=merged_df['Consumption'], y=slope * merged_df['Consumption'] + intercept, mode='lines', name='Regression Line')
-  fig.update_layout(annotations=[dict(text=corr_text, x=0.05, y=0.95, xref='paper', yref='paper', showarrow=False)])
-  st.plotly_chart(fig)
-  
-  # Show data table
-  st.write(merged_df)
-  
-  # Update layout and axes properties
-  st.set_page_config(layout="wide")
+  # Title of the web ap
   
 
 # Page 2 - Feature importance page
