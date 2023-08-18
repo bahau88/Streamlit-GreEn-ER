@@ -52,6 +52,52 @@ fig.update_layout(
 fig.update_traces(hovertemplate='%{y:.2f}')
 
 #--------------------------------------------------------------------------------------------------------------------
+# DATA ANALYSIS ------------------------------------------------------------------------------------------------------------------------
+merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv') 
+# Convert to datetime data type
+merged_df['Date'] = pd.to_datetime(merged_df['Date'])
+
+# Create subplots for each season
+def create_box_plots(df, title, color):
+    fig_season = go.Figure()
+    
+    fig_season.add_trace(go.Box(x=df.index.day_name(), y=df['Consumption'], name=title,
+                         boxmean='sd', marker_color=color))
+    
+    fig_season.update_layout(
+        xaxis_title='Day of the Week',
+        yaxis_title='Consumption',
+        title_text=title,
+        boxmode='group',
+        showlegend=False
+    )
+    
+    return fig_season
+
+# Convert to datetime data type
+merged_df['Date'] = pd.to_datetime(merged_df['Date'])
+
+# Split data into seasons
+df_boxplot = merged_df.set_index('Date')
+
+df_spring = pd.concat([df_boxplot['2021-03-01':'2021-05-31'],
+                       df_boxplot['2022-03-01':'2022-05-31'],
+                       df_boxplot['2023-03-01':'2023-04-26']])
+
+df_summer = pd.concat([df_boxplot['2020-08-24':'2020-08-31'],
+                       df_boxplot['2021-06-01':'2021-08-31'],
+                       df_boxplot['2022-06-01':'2022-08-31']])
+
+df_autumn = pd.concat([df_boxplot['2020-09-01':'2020-11-30'],
+                       df_boxplot['2021-09-01':'2021-11-30'],
+                       df_boxplot['2022-09-01':'2022-11-30']])
+
+df_winter = pd.concat([df_boxplot['2020-12-01':'2020-12-31'],
+                       df_boxplot['2021-12-01':'2021-12-31'],
+                       df_boxplot['2022-12-01':'2023-02-28']])
+
+
+#---------------------------------------------------------------------------------------------------------------------------------------------------
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
 # Load the data
 merged_df = pd.read_csv("https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv")
@@ -288,6 +334,17 @@ def visualization_page():
 
     # Show the figure
     st.plotly_chart(fig_exogeneous)
+
+# Page 2 - Consumption Analysis
+def analysis_page():
+  # Create Streamlit app
+  st.title('Energy Consumption Analysis by Season')
+  
+  # Create box plots for each season
+  st.plotly_chart(create_box_plots(df_spring, 'Spring', 'red'), use_container_width=True)
+  st.plotly_chart(create_box_plots(df_summer, 'Summer', 'blue'), use_container_width=True)
+  st.plotly_chart(create_box_plots(df_autumn, 'Autumn', 'orange'), use_container_width=True)
+  st.plotly_chart(create_box_plots(df_winter, 'Winter', 'green'), use_container_width=True)
         
 # Page 2 - Feature importance page
 def importance_page():
@@ -315,7 +372,7 @@ def importance_page():
         plot_feature_importances(features, trained_model.feature_importances_)
         
 # Page 3 - Forecast page
-def forecast_page():
+def forecast_page_fnn():
     st.title('Energy Consumption Prediction')
     st.subheader("📈 Neural Network")
     st.write("Neural network is flexible in terms of input features, since it allows to include a wide range of variables and handle large amounts of data efficiently. It is also capable of capturing complex nonlinear relationships between input variables and electricity consumption.")
@@ -362,8 +419,12 @@ def main():
         "Go to",
         [
             ("Data Visualization", "📊 "),
+            ("Consumption Analysis", "📑"),
+            ("Linear Regression", "📑"),
             ("Features Importance", "📑"),
-            ("Electricity Forecast", "📈"),
+            ("Electricity Forecast FNN", "📈"),
+            ("Electricity Forecast FNN", "📈"),
+            ("Data Sources", "📈"),
             ("About", "🚀"),
             ("Contact", "📫")
         ],
@@ -373,10 +434,12 @@ def main():
 
     if selected_page[0] == "Data Visualization":
         visualization_page()
+    elif selected_page[0] == "Consumption Analysis":
+        analysis_page() 
     elif selected_page[0] == "Features Importance":
         importance_page()
-    elif selected_page[0] == "Electricity Forecast":
-        forecast_page()
+    elif selected_page[0] == "Electricity Forecast FNN":
+        forecast_page_fnn()
     elif selected_page[0] == "About":
         about_page()
     elif selected_page[0] == "Contact":
