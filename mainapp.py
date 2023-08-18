@@ -86,7 +86,7 @@ def create_box_plot(df, season_name, color):
 # LINEAR REGRESSION #--------------------------------------------------------------------------------------------------------------------
 merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv')
 # Create a 1x1 matrix of subplots
-fig = make_subplots(rows=8, cols=1, vertical_spacing=0.15)
+fig = make_subplots(rows=8, cols=1, vertical_spacing=0.06)
 
 # List of column pairs to plot
 columns = [
