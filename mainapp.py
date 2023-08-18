@@ -338,42 +338,61 @@ def analysis_page():
 
 # Page 3 - Linear Regression
 def regression_page():
-  # Create Streamlit app
-  st.title('Energy Consumption Analysis')
-  st.subheader('Correlation between Consumption and Other Variables')
-  
-  # Select the columns to be plotted
-  columns = ['Number of Room', 'Events', 'Dayindex', 'Occupants', 
-             'Temperature', 'Cloudcover', 'Visibility', 'Solarradiation']
-  
-  # Create a 3x3 matrix of subplots
-  fig = make_subplots(rows=3, cols=3, subplot_titles=columns, shared_xaxes=True)
-  
-  for idx, col in enumerate(columns, start=1):
-      x = merged_df['Consumption']
-      y = merged_df[col]
-      
-      slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
-      line = slope * x + intercept
-      corr_text = f"Correlation: {r_value:.2f}"
-      
-      row = (idx - 1) // 3 + 1
-      col = (idx - 1) % 3 + 1
-      
-      fig.add_trace(go.Scatter(x=x, y=y, mode='markers'), row=row, col=col)
-      fig.add_trace(go.Scatter(x=x, y=line, mode='lines', line=dict(color='red')), row=row, col=col)
-      fig.update_xaxes(title_text="Consumption", row=row, col=col)
-      fig.update_yaxes(title_text=col, row=row, col=col)
-      fig.add_annotation(text=corr_text, xref="paper", yref="paper", x=0.15, y=0.95, showarrow=False)
-  
-  # Update layout and axes properties
-  fig.update_layout(
-      width=1000,  # set width of the plot
-      height=800,  # set height of the plot
-  )
-  
-  # Display the plot using st.plotly_chart
-  st.plotly_chart(fig, use_container_width=True)
+  st.title("Data Visualization with Linear Regression")
+
+    # Simulated data for demonstration purposes
+    np.random.seed(42)
+    merged_df = {
+        'Consumption': np.random.rand(100),
+        'Number of Room': np.random.rand(100),
+        'Events': np.random.rand(100),
+        'Dayindex': np.random.rand(100),
+        'Occupants': np.random.rand(100),
+        'Temperature': np.random.rand(100),
+        'Cloudcover': np.random.rand(100),
+        'Visibility': np.random.rand(100),
+        'Solarradiation': np.random.rand(100)
+    }
+
+    # Create a 2x2 matrix of subplots
+    fig_regression = make_subplots(rows=4, cols=2, subplot_titles=("Consumption vs Number of Room", "Consumption vs Events",
+                                                        "Consumption vs Day Index", "Consumption vs Occupants",
+                                                        "Consumption vs Temperature", "Consumption vs Cloud Cover",
+                                                        "Consumption vs Visibility", "Consumption vs Solar Radiation"))
+
+    for i, (y_column, subplot_title) in enumerate([('Number of Room', "Consumption vs Number of Room"),
+                                                   ('Events', "Consumption vs Events"),
+                                                   ('Dayindex', "Consumption vs Day Index"),
+                                                   ('Occupants', "Consumption vs Occupants"),
+                                                   ('Temperature', "Consumption vs Temperature"),
+                                                   ('Cloudcover', "Consumption vs Cloud Cover"),
+                                                   ('Visibility', "Consumption vs Visibility"),
+                                                   ('Solarradiation', "Consumption vs Solar Radiation")], start=1):
+
+        x = merged_df['Consumption']
+        y = merged_df[y_column]
+
+        # Calculate the linear regression line for each plot and the correlation coefficient (r-value)
+        slope, intercept, r_value, _, _ = stats.linregress(x, y)
+        line = slope * x + intercept
+        corr_text = f"Correlation: {r_value:.2f}"
+
+        # Plot the scatter plot and add the linear regression line
+        fig_regression.add_trace(go.Scatter(x=x, y=y, mode='markers'), row=i, col=1)
+        fig_regression.add_trace(go.Scatter(x=x, y=line, mode='lines', line=dict(color='red')), row=i, col=1)
+        fig_regression.update_xaxes(title_text="Consumption", row=i, col=1)
+        fig_regression.update_yaxes(title_text=y_column, row=i, col=1)
+        fig_regression.add_annotation(text=corr_text, xref="paper", yref="paper", x=0.1, y=1 - i * 0.25, showarrow=False)
+
+    # Update layout and axes properties
+    fig_regression.update_layout(
+        width=1000,  # set width of the plot
+        height=1400,  # set height of the plot
+        showlegend=False
+    )
+
+    # Convert the Plotly figure to a Streamlit figure
+    st.plotly_chart(fig_regression, use_container_width=True)
   
 
 # Page 2 - Feature importance page
