@@ -83,9 +83,6 @@ def create_box_plot(df, season_name, color):
     return fig_box
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------
-# LINEAR REGRESSION #--------------------------------------------------------------------------------------------------------------------
-merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv')
-#---------------------------------------------------------------------------------------------------------------------------------------------------
 
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
 # Load the data
@@ -333,12 +330,6 @@ def analysis_page():
   st.title("Data Analysis with Plotly and Streamlit")
   st.plotly_chart(fig)
 
-
-
-# Page 3 - Linear Regression
-def regression_page():
-  # Title of the web ap
-  
 
 # Page 2 - Feature importance page
 def importance_page():
