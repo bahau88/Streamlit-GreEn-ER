@@ -100,11 +100,11 @@ df_winter = pd.concat([df_boxplot['2020-12-01':'2020-12-31'],
 
 
 def create_monthly_consumption_boxplot(df):
-    fig = px.box(df, x='Month', y='Consumption', boxmode='overlay',
+    fig_monthly = px.box(df, x='Month', y='Consumption', boxmode='overlay',
                  category_orders={'Month': ['January', 'February', 'March', 'April', 'May', 'June',
                                             'July', 'August', 'September', 'October', 'November', 'December']})
-    fig.update_traces(marker_color='blue')
-    fig.update_layout(
+    fig_monthly.update_traces(marker_color='blue')
+    fig_monthly.update_layout(
         xaxis_title='Month',
         yaxis_title='Consumption',
         plot_bgcolor='white',
@@ -112,7 +112,7 @@ def create_monthly_consumption_boxplot(df):
         height=500,
         font=dict(size=16)
     )
-    return fig
+    return fig_monthly
 
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
