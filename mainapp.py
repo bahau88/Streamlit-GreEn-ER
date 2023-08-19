@@ -352,13 +352,13 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     
     for i in range(num_hours):
         numberofroom = numberofroom_arr[i]
-        events = events_arr[i]
+        #events = events_arr[i]
         dayindex = dayindex_arr[i]
         occupants = occupants_arr[i]
         temperature = temperature_arr[i]
         cloudcover = cloudcover_arr[i]
         visibility = visibility_arr[i]
-        solarradiation = solarradiation_arr[i]
+        #solarradiation = solarradiation_arr[i]
         input_data[i] = [numberofroom, occupants, temperature, dayindex, cloudcover, visibility]
     
     input_data = (input_data - X_mean) / X_std
