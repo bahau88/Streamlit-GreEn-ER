@@ -329,9 +329,6 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     # Train the model and store the history object
     history = model.fit(train_X, train_Y, epochs=50, batch_size=10, verbose=2, validation_data=(val_X, val_Y), shuffle=False)
     
-    # Ask the user how many hours ahead to predict
-    num_hours = 24
-    
     # Generate the list of dates and hours to predict
     last_datetime = data.index.max()
     next_day = last_datetime + pd.DateOffset(hours=1)
@@ -540,7 +537,7 @@ def importance_page():
         st.write("R2 score:", r2)
         plot_feature_importances(features, trained_model.feature_importances_)
         
-# Page 4 - Forecast page
+# Page 4 - Forecast page FNN
 def forecast_page_fnn():
     st.title('Energy Consumption Prediction')
     st.subheader("📈 Neural Network")
@@ -555,7 +552,7 @@ def forecast_page_fnn():
     if st.button('Predict'):
         predict_consumption(num_hours, num_epochs, batch_size, variables)
 
-# Page 4 - Forecast page
+# Page 4 - Forecast page LSTM
 def forecast_page_lstm():
     st.title('Energy Consumption Prediction')
     st.subheader("📈 Neural Network")
@@ -570,8 +567,6 @@ def forecast_page_lstm():
     if st.button('Predict'):
         predict_consumption2(num_hours, num_epochs, batch_size, variables)
 
-
-      
         
 # Page 5 - About page
 def about_page():
@@ -607,7 +602,6 @@ def main():
         [
             ("Data Visualization", "📊 "),
             ("Consumption Analysis", "📑"),
-            ("Regression and Corelation", "📑"),
             ("Features Importance", "📑"),
             ("Electricity Forecast FNN", "📈"),
             ("Electricity Forecast LSTM", "📈"),
@@ -623,8 +617,6 @@ def main():
         visualization_page()
     elif selected_page[0] == "Consumption Analysis":
         analysis_page() 
-    elif selected_page[0] == "Regression and Corelation":
-        regression_page() 
     elif selected_page[0] == "Features Importance":
         importance_page()
     elif selected_page[0] == "Electricity Forecast FNN":
