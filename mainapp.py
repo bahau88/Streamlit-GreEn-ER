@@ -464,6 +464,7 @@ def visualization_page():
     fig.update(data=selected_traces)
     # Display the figure
     st.plotly_chart(fig)
+    merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv') 
     # Create the subplots
     fig_exogeneous = make_subplots(rows=2, cols=3, subplot_titles=('Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility'))
     # Add the traces to the subplots
