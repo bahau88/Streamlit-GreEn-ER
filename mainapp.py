@@ -54,45 +54,45 @@ fig.update_traces(hovertemplate='%{y:.2f}')
 
 #--------------------------------------------------------------------------------------------------------------------
 # DATA ANALYSIS ------------------------------------------------------------------------------------------------------------------------
+# Load data
 merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv') 
-df_boxplot = merged_df.copy()
 df_boxplot = merged_df.copy()
 
 df_boxplot = df_boxplot.set_index('Date')
 df_boxplot.index = pd.to_datetime(df_boxplot.index)
 
-df_spring = pd.concat([
-    df_boxplot[(df_boxplot.index >= '2021-03-01') & (df_boxplot.index <= '2021-05-31')],
-    df_boxplot[(df_boxplot.index >= '2022-03-01') & (df_boxplot.index <= '2022-05-31')],
-    df_boxplot[(df_boxplot.index >= '2023-03-01') & (df_boxplot.index <= '2022-04-26')]
-])
-
-# ... Repeat the same process for df_summer, df_autumn, and df_winter ...
-
-day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-
+# Create subplots for each season
 fig_boxplot = sp.make_subplots(rows=1, cols=4, subplot_titles=('Spring', 'Summer', 'Autumn', 'Winter'),
                               horizontal_spacing=0.05)
 
-fig_boxplot.add_trace(go.Box(x=df_spring.index.day_name(), y=df_spring['Consumption'], name='Spring',
-                             boxmean='sd', marker_color='red'), row=1, col=1)
+# Create a list of day names to use for X axis labels
+day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-# ... Add the remaining traces ...
+# Define function to add 3D box plots to the subplots
+def add_box_plot(fig, df, row, col, season_name, marker_color):
+    fig.add_trace(go.Box(x=df.index.day_name(), y=df['Consumption'], name=season_name,
+                         boxmean='sd', marker_color=marker_color), row=row, col=col)
 
+# Create subplots for each season
+add_box_plot(fig_boxplot, df_spring, 1, 1, 'Spring', 'red')
+add_box_plot(fig_boxplot, df_summer, 1, 2, 'Summer', 'blue')
+add_box_plot(fig_boxplot, df_autumn, 1, 3, 'Autumn', 'orange')
+add_box_plot(fig_boxplot, df_winter, 1, 4, 'Winter', 'green')
+
+# Set the layout for the figure
 fig_boxplot.update_layout(
     scene=dict(
         xaxis=dict(title='Day of the Week'),
         yaxis=dict(title='Consumption'),
         zaxis=dict(title='Season', showgrid=False, showticklabels=False),
         bgcolor='white',
-        camera=dict(eye=dict(x=-1.5, y=-1.5, z=1.5))
+        camera=dict(eye=dict(x=-1.5, y=-1.5, z=1.5))  # Adjust the camera angle
     ),
     height=600,
     title_text="Consumption by Season",
     boxmode='group',
     showlegend=False
 )
-
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
