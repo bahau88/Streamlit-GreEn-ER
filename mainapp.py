@@ -556,7 +556,7 @@ def forecast_page_lstm():
     variables = st.multiselect('Select the variables to use for prediction', ['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility'])
 
     if st.button('Predict'):
-      predict_consumption2(num_hours, num_epochs, batch_size, variables)
+        predict_consumption2(num_hours, num_epochs, batch_size, variables)
 
 
       
