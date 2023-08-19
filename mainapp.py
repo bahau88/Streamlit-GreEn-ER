@@ -84,17 +84,17 @@ day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday',
 
 # Create a function to generate a Plotly figure for each season
 def create_season_boxplot(df, season_name, marker_color):
-    fig = go.Figure()
-    fig.add_trace(go.Box(x=df.index.day_name(), y=df['Consumption'], name=season_name,
+    fig_season = go.Figure()
+    fig_season.add_trace(go.Box(x=df.index.day_name(), y=df['Consumption'], name=season_name,
                          boxmean='sd', marker_color=marker_color))
-    fig.update_layout(
+    fig_season.update_layout(
         xaxis=dict(title='Day of the Week'),
         yaxis=dict(title='Consumption'),
         title_text=f"Consumption in {season_name}",
         boxmode='group',
         showlegend=False
     )
-    return fig
+    return fig_season
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
