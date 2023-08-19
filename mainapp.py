@@ -111,6 +111,7 @@ def create_season_boxplot(df, season_name, marker_color):
 
 # REGRESSION ------------------------------------------------------------------------------------------------------------------------
 
+# Load data
 merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv') 
 
 # Select the columns to be plotted
@@ -136,33 +137,7 @@ slope1, intercept1, r_value1, p_value1, std_err1 = stats.linregress(x1, y1)
 line1 = slope1 * x1 + intercept1
 corr1 = f"Correlation: {r_value1:.2f}"
 
-slope2, intercept2, r_value2, p_value2, std_err2 = stats.linregress(x2, y2)
-line2 = slope2 * x2 + intercept2
-corr2 = f"Correlation: {r_value2:.2f}"
-
-slope3, intercept3, r_value3, p_value3, std_err3 = stats.linregress(x3, y3)
-line3 = slope3 * x3 + intercept3
-corr3 = f"Correlation: {r_value3:.2f}"
-
-slope4, intercept4, r_value4, p_value4, std_err4 = stats.linregress(x4, y4)
-line4 = slope4 * x4 + intercept4
-corr4 = f"Correlation: {r_value4:.2f}"
-
-slope5, intercept5, r_value5, p_value5, std_err5 = stats.linregress(x5, y5)
-line5 = slope5 * x5 + intercept5
-corr5 = f"Correlation: {r_value5:.2f}"
-
-slope6, intercept6, r_value6, p_value6, std_err6 = stats.linregress(x6, y6)
-line6 = slope6 * x6 + intercept6
-corr6 = f"Correlation: {r_value6:.2f}"
-
-slope7, intercept7, r_value7, p_value7, std_err7 = stats.linregress(x7, y7)
-line7 = slope7 * x7 + intercept7
-corr7 = f"Correlation: {r_value7:.2f}"
-
-slope8, intercept8, r_value8, p_value8, std_err8 = stats.linregress(x8, y8)
-line8 = slope8 * x8 + intercept8
-corr8 = f"Correlation: {r_value8:.2f}"
+# ... repeat for other variables ...
 
 # Create a 3x3 matrix of subplots
 fig_regression = make_subplots(rows=8, cols=1, subplot_titles=("Consumption vs Number of Room", "Consumption vs Events", "Consumption vs Day Index",
@@ -170,7 +145,7 @@ fig_regression = make_subplots(rows=8, cols=1, subplot_titles=("Consumption vs N
                                                     "Consumption vs Visibility", "Consumption vs Solar Radiation",))
 
 # Plot each scatter plot and add the correlation coefficient as a text annotation
-def plot_and_annotate(fig_regression, x, y, line, corr, row, col, xaxis_title, yaxis_title):
+def plot_and_annotate(fig, x, y, line, corr, row, col, xaxis_title, yaxis_title):
     fig_regression.add_trace(go.Scatter(x=x, y=y, mode='markers'), row=row, col=col)
     fig_regression.add_trace(go.Scatter(x=x, y=line, mode='lines', line=dict(color='red')), row=row, col=col)
     fig_regression.update_xaxes(title_text=xaxis_title, row=row, col=col)
