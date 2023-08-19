@@ -297,7 +297,7 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     data.index.names = ['Datetime']
     
     # Split the data into input (X) and output (Y) variables
-    X = data[['Number of Room', 'Events', 'Occupants', 'Temperature', 'Dayindex', 'Cloudcover', 'Visibility', 'Solarradiation']].values
+    X = data[['Number of Room', 'Occupants', 'Temperature', 'Dayindex', 'Cloudcover', 'Visibility']].values
     #X = data[['Temperature', 'Dayindex' , 'Cloudcover', 'Visibility', 'Solarradiation']].values
     Y = data['Consumption'].values
     
@@ -356,7 +356,7 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
         cloudcover = cloudcover_arr[i]
         visibility= visibility_arr[i]
         solarradiation = solarradiation_arr[i]
-        input_data[i] = [numberofroom, events, occupants, temperature,  dayindex, cloudcover, visibility, solarradiation]
+        input_data[i] = [numberofroom, occupants, temperature,  dayindex, cloudcover, visibility,]
         #input_data[i] = [temperature, dayindex, cloudcover, visibility, solarradiation]
     
     input_data = (input_data - X_mean) / X_std
