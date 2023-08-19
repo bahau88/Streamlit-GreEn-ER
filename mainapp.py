@@ -294,11 +294,15 @@ merged_df = load_data()
 
 # Define the prediction function
 def predict_consumption2(num_hours, num_epochs, batch_size, variables):
+    # Convert the date and hour columns to datetime format
     data = merged_df.copy()
+    
+    # Rename the index level "Date" to "Datetime"
     data.index.names = ['Datetime']
     
     # Split the data into input (X) and output (Y) variables
-    X = data[['Number of Room', 'Occupants', 'Temperature', 'Dayindex', 'Cloudcover', 'Visibility']].values
+    X = data[['Number of Room', 'Events', 'Occupants', 'Temperature', 'Dayindex', 'Cloudcover', 'Visibility', 'Solarradiation']].values
+    #X = data[['Temperature', 'Dayindex' , 'Cloudcover', 'Visibility', 'Solarradiation']].values
     Y = data['Consumption'].values
     
     # Normalize the input data
@@ -308,7 +312,11 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     
     # Reshape input data for LSTM
     X = X.reshape(X.shape[0], 1, X.shape[1])
-
+    
+    # Split the data into training, validation, and testing sets
+    train_X, temp_X, train_Y, temp_Y = train_test_split(X, Y, test_size=0.2, random_state=42)
+    val_X, test_X, val_Y, test_Y = train_test_split(temp_X, temp_Y, test_size=0.5, random_state=42)
+    
     # Define the model
     model = Sequential()
     model.add(LSTM(12, input_shape=(1, X.shape[2]), activation='relu'))
@@ -317,7 +325,7 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     
     # Compile the model
     model.compile(loss='mean_squared_error', optimizer='adam')
-
+    
     # Train the model and store the history object
     history = model.fit(train_X, train_Y, epochs=50, batch_size=10, verbose=2, validation_data=(val_X, val_Y), shuffle=False)
     
@@ -329,6 +337,7 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     next_day = last_datetime + pd.DateOffset(hours=1)
     datetime_range = pd.date_range(next_day, periods=num_hours, freq='H')
     selected_datetimes = [str(d) for d in datetime_range]
+
     
     # Make predictions for the selected dates and hours
     input_data = np.zeros((num_hours, X.shape[2]))
