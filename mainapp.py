@@ -410,7 +410,7 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     st.plotly_chart(fig_tvl)
 
 
-def plot_predictions(data, Y, train_predictions):
+def plot_predictions2(data, Y, train_predictions):
     fig_tp = go.Figure()
     fig_tp.add_trace(go.Scatter(x=data.index, y=Y, name='True Consumption', line_color='orange'))
     fig_tp.add_trace(go.Scatter(x=data.index, y=train_predictions.flatten(), name='Predicted Consumption', line_color='red'))
