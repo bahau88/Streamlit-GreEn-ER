@@ -63,9 +63,21 @@ df_boxplot = df_boxplot.set_index('Date')
 df_boxplot.index = pd.to_datetime(df_boxplot.index)
 
 # Create dataframes for each season (adjust the date ranges as needed)
-df_spring = df_boxplot[(df_boxplot.index >= '2021-03-01') & (df_boxplot.index <= '2021-05-31')]
+# Create dataframes for each season (adjust the date ranges as needed)
+df_spring = pd.concat([df_boxplot[(df_boxplot.index >= '2021-03-01') & (df_boxplot.index <= '2021-05-31')],
+                       df_boxplot[(df_boxplot.index >= '2022-03-01') & (df_boxplot.index <= '2022-05-31')],
+                       df_boxplot[(df_boxplot.index >= '2023-03-01') & (df_boxplot.index <= '2023-04-26')]])
+df_summer = pd.concat([df_boxplot[(df_boxplot.index >= '2020-08-24') & (df_boxplot.index <= '2020-08-31')],
+                       df_boxplot[(df_boxplot.index >= '2021-06-01') & (df_boxplot.index <= '2021-08-31')],
+                       df_boxplot[(df_boxplot.index >= '2022-06-01') & (df_boxplot.index <= '2022-08-31')]])
 
-# ... repeat for other seasons ...
+df_autumn = pd.concat([df_boxplot[(df_boxplot.index >= '2020-09-01') & (df_boxplot.index <= '2020-11-30')],
+                       df_boxplot[(df_boxplot.index >= '2021-09-01') & (df_boxplot.index <= '2021-11-30')],
+                       df_boxplot[(df_boxplot.index >= '2022-09-01') & (df_boxplot.index <= '2022-11-30')]])
+
+df_winter = pd.concat([df_boxplot[(df_boxplot.index >= '2020-12-01') & (df_boxplot.index <= '2021-02-28')],
+                       df_boxplot[(df_boxplot.index >= '2021-12-01') & (df_boxplot.index <= '2022-02-28')],
+                       df_boxplot[(df_boxplot.index >= '2022-12-01') & (df_boxplot.index <= '2023-02-28')]])
 
 # Create a list of day names to use for X axis labels
 day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
@@ -329,6 +341,9 @@ def analysis_page():
   st.subheader("📑 Consumption Distribution by Season")
   st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
   st.plotly_chart(create_season_boxplot(df_spring, 'Spring', 'red'))
+  st.plotly_chart(create_season_boxplot(df_summer, 'Summer', 'blue'))
+  st.plotly_chart(create_season_boxplot(df_autumn, 'Autumn', 'green'))
+  st.plotly_chart(create_season_boxplot(df_winter, 'Winter', 'orange'))
   
 
 
