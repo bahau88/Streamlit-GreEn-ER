@@ -97,79 +97,6 @@ def create_season_boxplot(df, season_name, marker_color):
     return fig_season
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 
-# REGRESSION E #--------------------------------------------------------------------------------------------------------------------
-# Load data
-merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv') 
-
-# Select the columns to be plotted
-x1 = merged_df['Consumption']
-y1 = merged_df['Number of Room']
-x2 = merged_df['Consumption']
-y2 = merged_df['Events']
-x3 = merged_df['Consumption']
-y3 = merged_df['Dayindex']
-x4 = merged_df['Consumption']
-y4 = merged_df['Occupants']
-x5 = merged_df['Consumption']
-y5 = merged_df['Temperature']
-x6 = merged_df['Consumption']
-y6 = merged_df['Cloudcover']
-x7 = merged_df['Consumption']
-y7 = merged_df['Visibility']
-x8 = merged_df['Consumption']
-y8 = merged_df['Solarradiation']
-
-# Calculate the linear regression line for each plot and the correlation coefficient (r-value)
-slope1, intercept1, r_value1, p_value1, std_err1 = stats.linregress(x1, y1)
-line1 = slope1 * x1 + intercept1
-corr1 = f"Correlation: {r_value1:.2f}"
-
-slope2, intercept2, r_value2, p_value2, std_err2 = stats.linregress(x2, y2)
-line2 = slope2 * x2 + intercept2
-corr2 = f"Correlation: {r_value2:.2f}"
-
-slope3, intercept3, r_value3, p_value3, std_err3 = stats.linregress(x3, y3)
-line3 = slope3 * x3 + intercept3
-corr3 = f"Correlation: {r_value3:.2f}"
-
-slope4, intercept4, r_value4, p_value4, std_err4 = stats.linregress(x4, y4)
-line4 = slope4 * x4 + intercept4
-corr4 = f"Correlation: {r_value4:.2f}"
-
-slope5, intercept5, r_value5, p_value5, std_err5 = stats.linregress(x5, y5)
-line5 = slope5 * x5 + intercept5
-corr5 = f"Correlation: {r_value5:.2f}"
-
-slope6, intercept6, r_value6, p_value6, std_err6 = stats.linregress(x6, y6)
-line6 = slope6 * x6 + intercept6
-corr6 = f"Correlation: {r_value6:.2f}"
-
-slope7, intercept7, r_value7, p_value7, std_err7 = stats.linregress(x7, y7)
-line7 = slope7 * x7 + intercept7
-corr7 = f"Correlation: {r_value7:.2f}"
-
-slope8, intercept8, r_value8, p_value8, std_err8 = stats.linregress(x8, y8)
-line8 = slope8 * x8 + intercept8
-corr8 = f"Correlation: {r_value8:.2f}"
-
-# Create a 3x3 matrix of subplots
-fig_regression = make_subplots(rows=8, cols=1, subplot_titles=("Consumption vs Number of Room", "Consumption vs Events", "Consumption vs Day Index",
-                                                    "Consumption vs Occupants", "Consumption vs Temperature", "Consumption vs Cloud Cover",
-                                                    "Consumption vs Visibility", "Consumption vs Solar Radiation",))
-
-# Plot each scatter plot and add the correlation coefficient as a text annotation
-def plot_and_annotate(fig_regression, x, y, line, corr, row, col, xaxis_title, yaxis_title):
-    fig_regression.add_trace(go.Scatter(x=x, y=y, mode='markers'), row=row, col=col)
-    fig_regression.add_trace(go.Scatter(x=x, y=line, mode='lines', line=dict(color='red')), row=row, col=col)
-    fig_regression.update_xaxes(title_text=xaxis_title, row=row, col=col)
-    fig_regression.update_yaxes(title_text=yaxis_title, row=row, col=col)
-    fig_regression.add_annotation(text=corr, xref="paper", yref="paper", x=0.1 + 0.4 * (col - 1), y=1 - 0.285 * (row - 1), showarrow=False)
-
-
-
-#--------------------------------------------------------------------------------------------------------------------
-
-
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
 # Load the data
 merged_df = pd.read_csv("https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv")
@@ -199,7 +126,7 @@ def plot_feature_importances(features, importances):
     st.plotly_chart(fig)
     
 #--------------------------------------------------------------------------------------------------------------------
-# FFORECAST #--------------------------------------------------------------------------------------------------------------------
+# FFORECAST FNN #--------------------------------------------------------------------------------------------------------------------
 # Load the data
 @st.cache
 def load_data():
@@ -343,6 +270,149 @@ def plot_predictions(data, Y, train_predictions):
 
 #--------------------------------------------------------------------------------------------------------------------
 
+# FFORECAST LSTM #--------------------------------------------------------------------------------------------------------------------
+# Load the data
+@st.cache
+def load_data():
+    merged_df2 = pd.read_csv("https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv")
+    merged_df2['Date'] = pd.to_datetime(merged_df2['Date'])
+    merged_df2.set_index('Date', inplace=True)
+    return merged_df2
+
+merged_df2 = load_data()
+
+# Define the prediction function
+def predict_consumption2(num_hours, num_epochs, batch_size, variables):
+    data = merged_df2.copy()
+    data.index.names = ['Datetime']
+
+    # Prepare selected variables
+    selected_variables = ['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility']
+    selected_variables = [var for var in selected_variables if var in variables]
+
+    # Split the data into training, validation, and testing sets
+    train_X, temp_X, train_Y, temp_Y = train_test_split(X, Y, test_size=0.2, random_state=42)
+    val_X, test_X, val_Y, test_Y = train_test_split(temp_X, temp_Y, test_size=0.5, random_state=42)
+
+    # Normalize the input data
+    X_mean = np.mean(X, axis=0)
+    X_std = np.std(X, axis=0)
+    X = (X - X_mean) / X_std
+
+    # Reshape input data for LSTM
+    X = X.reshape(X.shape[0], 1, X.shape[1])
+
+    # Define the model
+    model = Sequential()
+    model.add(LSTM(12, input_shape=(1, X.shape[2]), activation='relu'))
+    model.add(Dense(8, activation='relu'))
+    model.add(Dense(1, activation='linear')))
+
+    # Compile the model
+    model.compile(loss='mean_squared_error', optimizer='adam')
+
+    # Train the model and store the history object
+    history = model.fit(train_X, train_Y, epochs=50, batch_size=10, verbose=2, validation_data=(val_X, val_Y), shuffle=False)
+
+    # Generate the list of dates and hours to predict
+    last_datetime = data.index.max()
+    next_day = last_datetime + pd.DateOffset(hours=1)
+    datetime_range = pd.date_range(next_day, periods=num_hours, freq='H')
+    selected_datetimes = [str(d) for d in datetime_range]
+
+    # Prepare input data for prediction
+    input_data = np.zeros((num_hours, X.shape[1]))
+    numberofroom_arr = [0, 0, 0, 0, 0, 0, 0, 0, 21, 21, 21, 21, 5, 25, 25, 21, 19, 11, 2, 2, 0, 0, 0, 0]
+    dayindex_arr = [0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635,  0.635,  0.635,  0.635, 0.635]
+    occupants_arr = [0, 0, 0, 0, 0, 0, 0, 0, 923, 923, 923, 923, 633, 1068, 1068, 964, 908, 791, 371, 371, 0, 0, 0, 0]
+    temperature_arr = [7.6, 6.8, 5.9, 4.6, 4.4, 4.2, 3.7, 3.1, 5.2, 9.2, 11.6, 13.1, 14.9, 16.9, 18, 19.4, 20.8, 21.1, 21, 18.5, 17.5, 15.6, 14, 12.8]
+    cloudcover_arr = [60, 40, 0.7, 0, 80, 80, 60, 80, 50, 50, 60 , 50, 60, 60, 80, 80, 90, 100, 94.3, 95.7, 90, 96.3, 98.9, 96.3]
+    visibility_arr = [33.2, 25.2, 24.4, 19.7, 16.5, 20, 16.2, 14.9, 15.3, 23.9, 23.9, 24.5, 17.6, 29.9, 33.1, 19.2, 33.2, 30.7, 34.8, 38.2, 28.8, 26.3, 38.2, 34.9]
+
+    for i in range(num_hours):
+        numberofroom = numberofroom_arr[i]
+        dayindex = dayindex_arr[i]
+        occupants = occupants_arr[i]
+        temperature = temperature_arr[i]
+        cloudcover = cloudcover_arr[i]
+        visibility = visibility_arr[i]
+        input_data[i] = [numberofroom, dayindex, occupants, temperature, cloudcover, visibility]
+
+    input_data = (input_data - X_mean) / X_std
+
+    # Make predictions
+    predictions = model.predict(input_data)
+
+    # Print the predictions
+    for i in range(num_hours):
+        st.write('Predicted consumption for {}: {:.2f}'.format(selected_datetimes[i], predictions[i][0]))
+        
+    # Evaluate the model on the training set
+    rmse = sqrt(mean_squared_error(Y, model.predict(X)))
+    mse = mean_squared_error(Y, model.predict(X))
+    mae = mean_absolute_error(Y, model.predict(X))
+    r2 = r2_score(Y, model.predict(X))
+    st.write('RMSE: {:.2f}'.format(rmse))
+    st.write('MSE: {:.2f}'.format(mse))
+    st.write('MAE: {:.2f}'.format(mae))
+    st.write('R2 score: {:.2f}'.format(r2))
+
+    # Plot the true consumption values and the corresponding predicted values
+    train_predictions = model.predict(X)
+    fig = plot_predictions(data, Y, train_predictions)
+    st.plotly_chart(fig)
+    
+    # Show the chart of the last three days and the predicted days
+    last_three_days = data.iloc[-24:]
+    predicted_days = pd.DataFrame(predictions, columns=['Consumption'], index=datetime_range)
+
+    fig_prediction = go.Figure()
+    fig_prediction.add_trace(go.Bar(x=last_three_days.index, y=last_three_days['Consumption'], name='Previous days'))
+    fig_prediction.add_trace(go.Bar(x=predicted_days.index, y=predicted_days['Consumption'], name='Predicted days'))
+    fig_prediction.update_layout(title='Electricity consumption forecast', plot_bgcolor='white', xaxis_title='Date', yaxis_title='Electricity consumption')
+    st.plotly_chart(fig_prediction)
+
+    # Plot the training and validation loss
+    train_loss = history.history['loss']
+    val_loss = history.history['val_loss']
+    fig_tvl = go.Figure()
+    fig_tvl.add_trace(go.Scatter(
+        x=list(range(1, len(train_loss) + 1)),
+        y=train_loss,
+        mode='lines',
+        name='Training Loss'
+    ))
+    fig_tvl.add_trace(go.Scatter(
+        x=list(range(1, len(val_loss) + 1)),
+        y=val_loss,
+        mode='lines',
+        name='Validation Loss'
+    ))
+    fig_tvl.update_layout(
+        title='Training and Validation Loss',
+        plot_bgcolor='white',
+        xaxis_title='Epoch',
+        yaxis_title='Loss',
+        legend=dict(x=0.02, y=0.98),
+        margin=dict(l=40, r=20, t=60, b=40),
+    )
+    st.plotly_chart(fig_tvl)
+
+
+def plot_predictions2(data, Y, train_predictions):
+    fig_tp = go.Figure()
+    fig_tp.add_trace(go.Scatter(x=data.index, y=Y, name='True Consumption', line_color='orange'))
+    fig_tp.add_trace(go.Scatter(x=data.index, y=train_predictions.flatten(), name='Predicted Consumption', line_color='red'))
+    fig_tp.update_layout(
+        title='True vs. Predicted Consumption for Training Data',
+        plot_bgcolor='white',
+        xaxis_title='Date and Time',
+        yaxis_title='Consumption'
+    )
+    return fig_tp
+
+#-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 # Page 1 - Visualization page
 def visualization_page():
     st.title('Data Visualization')
@@ -417,30 +487,9 @@ def analysis_page():
   st.plotly_chart(create_season_boxplot(df_summer, 'Summer', 'blue'))
   st.plotly_chart(create_season_boxplot(df_autumn, 'Autumn', 'green'))
   st.plotly_chart(create_season_boxplot(df_winter, 'Winter', 'orange'))
-
-
-# Page 3 - Regression and Correlation
-def regression_page():
-  # Create Streamlit app
-  st.title('Energy Consumption Analysis')
-  st.subheader("📑 Consumption Distribution by Season")
-  st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
-  
-  plot_and_annotate(fig_regression, x1, y1, line1, corr1, 1, 1, "Consumption", "Number of Room")
-  plot_and_annotate(fig_regression, x2, y2, line2, corr2, 2, 1, "Consumption", "Events")
-  plot_and_annotate(fig_regression, x3, y3, line3, corr3, 3, 1, "Consumption", "Dayindex")
-  plot_and_annotate(fig_regression, x4, y4, line4, corr4, 4, 1, "Consumption", "Occupants")
-  plot_and_annotate(fig_regression, x5, y5, line5, corr5, 5, 1, "Consumption", "Temperature")
-  
-  # Update layout and axes properties
-  fig_regression.update_layout(
-      width=800,   # set width of the plot
-      height=1600,  # set height of the plot
-  )
-  st.plotly_chart(fig_regression)
   
 
-# Page 4 - Feature importance page
+# Page 3 - Feature importance page
 def importance_page():
     st.title("Features Importance")
     st.subheader("📑 ML Algorithms")
@@ -465,7 +514,7 @@ def importance_page():
         st.write("R2 score:", r2)
         plot_feature_importances(features, trained_model.feature_importances_)
         
-# Page 5 - Forecast page
+# Page 4 - Forecast page
 def forecast_page_fnn():
     st.title('Energy Consumption Prediction')
     st.subheader("📈 Neural Network")
@@ -479,8 +528,26 @@ def forecast_page_fnn():
 
     if st.button('Predict'):
         predict_consumption(num_hours, num_epochs, batch_size, variables)
+
+# Page 4 - Forecast page
+def forecast_page_lstm():
+    st.title('Energy Consumption Prediction')
+    st.subheader("📈 Neural Network")
+    st.write("Neural network is flexible in terms of input features, since it allows to include a wide range of variables and handle large amounts of data efficiently. It is also capable of capturing complex nonlinear relationships between input variables and electricity consumption.")
+    st.write("⚠️ MAE score shows the maximum error of the predicted value. An R2 score is close or eaqual to 1 means that the model perfectly explains all the variance in the dependent variable.")
+    st.write("📝 Note: Try to decrease the number of epochs for fast computing (for example : 2, 5, or 10)")
+    num_hours = st.slider('Select the number of hours ahead to predict', 1, 24, 12)
+    num_epochs = st.slider('Select the number of epochs', 1, 50, 5)
+    batch_size = st.slider('Select the batch size', 5, 15, 10)
+    variables = st.multiselect('Select the variables to use for prediction', ['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility'])
+
+    if st.button('Predict'):
+      predict_consumption2(num_hours, num_epochs, batch_size, variables)
+
+
+      
         
-# Page 4 - About page
+# Page 5 - About page
 def about_page():
     st.title("About")
     st.subheader("🏛 MIAI Grenoble")
@@ -491,7 +558,7 @@ def about_page():
     st.write("The G2Elab is a laboratory recognized nationally and internationally as a major player in the field of Electrical Engineering. Its activity covers a wide spectrum of research from electrical engineering materials, to component design and the study and management of complex systems such as power grids.")
 
     
-# Page 5 - Contact page
+# Page 6 - Contact page
 def contact_page():
     st.title("Contact")
     st.subheader("👨‍🎓 Student")
@@ -517,7 +584,7 @@ def main():
             ("Regression and Corelation", "📑"),
             ("Features Importance", "📑"),
             ("Electricity Forecast FNN", "📈"),
-            ("Electricity Forecast FNN", "📈"),
+            ("Electricity Forecast LSTM", "📈"),
             ("Data Sources", "📈"),
             ("About", "🚀"),
             ("Contact", "📫")
@@ -536,6 +603,8 @@ def main():
         importance_page()
     elif selected_page[0] == "Electricity Forecast FNN":
         forecast_page_fnn()
+    elif selected_page[0] == "Electricity Forecast LSTM":
+        forecast_page_lstm()
     elif selected_page[0] == "About":
         about_page()
     elif selected_page[0] == "Contact":
