@@ -515,7 +515,13 @@ def analysis_page():
   st.plotly_chart(create_season_boxplot(df_autumn, 'Autumn', 'green'))
   st.plotly_chart(create_season_boxplot(df_winter, 'Winter', 'orange'))
 
-
+# Page 2 - Consumption Analysis
+def regression_page():
+  # Create Streamlit app
+  st.title('Energy Consumption Analysis')
+  st.subheader("📑 Consumption Distribution by Season")
+  st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
+  #st.plotly_chart(fig_regression)
 
 # Page 3 - Feature importance page
 def importance_page():
