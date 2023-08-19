@@ -108,6 +108,96 @@ def create_season_boxplot(df, season_name, marker_color):
     return fig_season
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+# REGRESSION ------------------------------------------------------------------------------------------------------------------------
+
+# Load data
+# Load data
+merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv') 
+
+# Select the columns to be plotted
+x1 = merged_df['Consumption']
+y1 = merged_df['Number of Room']
+x2 = merged_df['Consumption']
+y2 = merged_df['Events']
+x3 = merged_df['Consumption']
+y3 = merged_df['Dayindex']
+x4 = merged_df['Consumption']
+y4 = merged_df['Occupants']
+x5 = merged_df['Consumption']
+y5 = merged_df['Temperature']
+x6 = merged_df['Consumption']
+y6 = merged_df['Cloudcover']
+x7 = merged_df['Consumption']
+y7 = merged_df['Visibility']
+x8 = merged_df['Consumption']
+y8 = merged_df['Solarradiation']
+
+# Calculate the linear regression line for each plot and the correlation coefficient (r-value)
+slope1, intercept1, r_value1, p_value1, std_err1 = stats.linregress(x1, y1)
+line1 = slope1 * x1 + intercept1
+corr1 = f"Correlation: {r_value1:.2f}"
+
+slope2, intercept2, r_value2, p_value2, std_err2 = stats.linregress(x2, y2)
+line2 = slope2 * x2 + intercept2
+corr2 = f"Correlation: {r_value2:.2f}"
+
+slope3, intercept3, r_value3, p_value3, std_err3 = stats.linregress(x3, y3)
+line3 = slope3 * x3 + intercept3
+corr3 = f"Correlation: {r_value3:.2f}"
+
+slope4, intercept4, r_value4, p_value4, std_err4 = stats.linregress(x4, y4)
+line4 = slope4 * x4 + intercept4
+corr4 = f"Correlation: {r_value4:.2f}"
+
+slope5, intercept5, r_value5, p_value5, std_err5 = stats.linregress(x5, y5)
+line5 = slope5 * x5 + intercept5
+corr5 = f"Correlation: {r_value5:.2f}"
+
+slope6, intercept6, r_value6, p_value6, std_err6 = stats.linregress(x6, y6)
+line6 = slope6 * x6 + intercept6
+corr6 = f"Correlation: {r_value6:.2f}"
+
+slope7, intercept7, r_value7, p_value7, std_err7 = stats.linregress(x7, y7)
+line7 = slope7 * x7 + intercept7
+corr7 = f"Correlation: {r_value7:.2f}"
+
+slope8, intercept8, r_value8, p_value8, std_err8 = stats.linregress(x8, y8)
+line8 = slope8 * x8 + intercept8
+corr8 = f"Correlation: {r_value8:.2f}"
+
+# Create a 3x3 matrix of subplots
+fig_regression = make_subplots(rows=8, cols=1, subplot_titles=("Consumption vs Number of Room", "Consumption vs Events", "Consumption vs Day Index",
+                                                    "Consumption vs Occupants", "Consumption vs Temperature", "Consumption vs Cloud Cover",
+                                                    "Consumption vs Visibility", "Consumption vs Solar Radiation",))
+
+# Plot each scatter plot and add the correlation coefficient as a text annotation
+def plot_and_annotate(fig_regression, x, y, line, corr, row, col, xaxis_title, yaxis_title):
+    fig_regression.add_trace(go.Scatter(x=x, y=y, mode='markers'), row=row, col=col)
+    fig_regression.add_trace(go.Scatter(x=x, y=line, mode='lines', line=dict(color='red')), row=row, col=col)
+    fig_regression.update_xaxes(title_text=xaxis_title, row=row, col=col)
+    fig_regression.update_yaxes(title_text=yaxis_title, row=row, col=col)
+    fig_regression.add_annotation(text=corr, xref="paper", yref="paper", x=0.1 + 0.4 * (col - 1), y=1 - 0.285 * (row - 1), showarrow=False)
+
+# Plot and annotate for each subplot
+plot_and_annotate(fig_regression, x1, y1, line1, corr1, 1, 1, "Consumption", "Number of Room")
+plot_and_annotate(fig_regression, x2, y2, line2, corr2, 2, 1, "Consumption", "Events")
+plot_and_annotate(fig_regression, x3, y3, line3, corr3, 3, 1, "Consumption", "Dayindex")
+plot_and_annotate(fig_regression, x4, y4, line4, corr4, 4, 1, "Consumption", "Occupants")
+plot_and_annotate(fig_regression, x5, y5, line5, corr5, 5, 1, "Consumption", "Temperature")
+plot_and_annotate(fig_regression, x6, y6, line6, corr6, 6, 1, "Consumption", "Cloudcover")
+plot_and_annotate(fig_regression, x7, y7, line7, corr7, 7, 1, "Consumption", "Visibility")
+plot_and_annotate(fig_regression, x8, y8, line8, corr8, 8, 1, "Consumption", "Solar Radiation")
+
+
+# Update layout and axes properties
+fig_regression.update_layout(
+    width=800,  # set width of the plot
+    height=1400,  # set height of the plot
+)
+#---------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
 # Load the data
 merged_df = pd.read_csv("https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv")
@@ -510,6 +600,26 @@ def analysis_page():
   st.plotly_chart(create_season_boxplot(df_summer, 'Summer', 'blue'))
   st.plotly_chart(create_season_boxplot(df_autumn, 'Autumn', 'green'))
   st.plotly_chart(create_season_boxplot(df_winter, 'Winter', 'orange'))
+
+
+# Page 2 - Consumption Analysis
+def analysis_page():
+  # Create Streamlit app
+  st.title('Energy Consumption Analysis')
+  st.subheader("📑 Consumption Distribution by Season")
+  st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
+  st.plotly_chart(create_season_boxplot(df_spring, 'Spring', 'red'))
+  st.plotly_chart(create_season_boxplot(df_summer, 'Summer', 'blue'))
+  st.plotly_chart(create_season_boxplot(df_autumn, 'Autumn', 'green'))
+  st.plotly_chart(create_season_boxplot(df_winter, 'Winter', 'orange'))
+
+# Page 2 - Regression
+def regressions_page():
+  # Create Streamlit app
+  st.title('Energy Consumption Analysis')
+  st.subheader("📑 Consumption Distribution by Season")
+  st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
+  st.plotly_chart(fig_regression)
   
 
 # Page 3 - Feature importance page
@@ -567,7 +677,6 @@ def forecast_page_lstm():
     if st.button('Predict'):
         predict_consumption2(num_hours, num_epochs, batch_size, variables)
 
-        
 # Page 5 - About page
 def about_page():
     st.title("About")
@@ -578,8 +687,19 @@ def about_page():
     st.subheader("🏛 G2Elab")
     st.write("The G2Elab is a laboratory recognized nationally and internationally as a major player in the field of Electrical Engineering. Its activity covers a wide spectrum of research from electrical engineering materials, to component design and the study and management of complex systems such as power grids.")
 
+
+# Page 6 - Data Scources Page
+def sources_page():
+    st.title("About")
+    st.subheader("🏛 GreEN-ER Electricity")
+    st.write("MIAI Grenoble Alpes (Multidisciplinary Institute in Artificial Intelligence) aims to conduct research in artificial intelligence at the highest level, to offer attractive courses for students and professionals of all levels, to support innovation in large companies, SMEs and startups and to inform and interact with citizens on all aspects of AI.")
+    st.subheader("🏛 Events")
+    st.write("The École nationale supérieure de l'énergie, l'eau et l'environnement or Grenoble INP-Ense3 (pronounced enne-sé-cube) is one of the 204 French engineering schools that combines technical and scientific skills in the domains of electrical, mechanical, hydraulic, civil and environmental engineering to be able to handle the full energy chain (production, distribution, usages, trading) as well as the full water cycle (harnessing, storage, supply, treatment).")
+    st.subheader("🏛 Holidays")
+    st.write("The G2Elab is a laboratory recognized nationally and internationally as a major player in the field of Electrical Engineering. Its activity covers a wide spectrum of research from electrical engineering materials, to component design and the study and management of complex systems such as power grids.")
+
     
-# Page 6 - Contact page
+# Page 7 - Contact page
 def contact_page():
     st.title("Contact")
     st.subheader("👨‍🎓 Student")
@@ -617,12 +737,16 @@ def main():
         visualization_page()
     elif selected_page[0] == "Consumption Analysis":
         analysis_page() 
+    elif selected_page[0] == "Regression":
+        regression_page() 
     elif selected_page[0] == "Features Importance":
         importance_page()
     elif selected_page[0] == "Electricity Forecast FNN":
         forecast_page_fnn()
     elif selected_page[0] == "Electricity Forecast LSTM":
         forecast_page_lstm()
+    elif selected_page[0] == "Data Sources":
+        sources_page()
     elif selected_page[0] == "About":
         about_page()
     elif selected_page[0] == "Contact":
