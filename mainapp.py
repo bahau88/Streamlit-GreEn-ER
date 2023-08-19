@@ -425,32 +425,12 @@ def regression_page():
   st.title('Energy Consumption Analysis')
   st.subheader("📑 Consumption Distribution by Season")
   st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
-  # Create a selectbox to choose the y-variable
-  selected_variable = st.selectbox("Select the variable for the y-axis:", ["Number of Room", "Events", "Dayindex", "Occupants", "Temperature", "Cloudcover", "Visibility", "Solar Radiation"])
-  # Map the selected variable to the corresponding y-variable
-  y_variable_map = {
-        "Number of Room": y1,
-        "Events": y2,
-        "Dayindex": y3,
-        "Occupants": y4,
-        "Temperature": y5,
-        "Cloudcover": y6,
-        "Visibility": y7,
-        "Solar Radiation": y8
-    }      
-    
-  # Get the corresponding y-variable based on the selected variable
-  selected_y_variable = y_variable_map[selected_variable]
-  # Plot and annotate for each subplot
+  
   plot_and_annotate(fig_regression, x1, y1, line1, corr1, 1, 1, "Consumption", "Number of Room")
   plot_and_annotate(fig_regression, x2, y2, line2, corr2, 2, 1, "Consumption", "Events")
   plot_and_annotate(fig_regression, x3, y3, line3, corr3, 3, 1, "Consumption", "Dayindex")
   plot_and_annotate(fig_regression, x4, y4, line4, corr4, 4, 1, "Consumption", "Occupants")
   plot_and_annotate(fig_regression, x5, y5, line5, corr5, 5, 1, "Consumption", "Temperature")
-  plot_and_annotate(fig_regression, x6, y6, line6, corr6, 6, 1, "Consumption", "Cloudcover")
-  plot_and_annotate(fig_regression, x7, y7, line7, corr7, 7, 1, "Consumption", "Visibility")
-  plot_and_annotate(fig_regression, x8, y8, line8, corr8, 8, 1, "Consumption", "Solar Radiation")
-  
   
   # Update layout and axes properties
   fig_regression.update_layout(
