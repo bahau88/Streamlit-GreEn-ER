@@ -427,9 +427,8 @@ def regression_page():
   st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
   # Create a selectbox to choose the y-variable
   selected_variable = st.selectbox("Select the variable for the y-axis:", ["Number of Room", "Events", "Dayindex", "Occupants", "Temperature", "Cloudcover", "Visibility", "Solar Radiation"])
-
-    # Map the selected variable to the corresponding y-variable
-    y_variable_map = {
+  # Map the selected variable to the corresponding y-variable
+  y_variable_map = {
         "Number of Room": y1,
         "Events": y2,
         "Dayindex": y3,
@@ -438,7 +437,7 @@ def regression_page():
         "Cloudcover": y6,
         "Visibility": y7,
         "Solar Radiation": y8
-    }  
+    }      
     
   # Get the corresponding y-variable based on the selected variable
   selected_y_variable = y_variable_map[selected_variable]
