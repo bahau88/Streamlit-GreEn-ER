@@ -95,6 +95,32 @@ def create_season_boxplot(df, season_name, marker_color):
         showlegend=False
     )
     return fig_season
+
+
+# Convert 'Date' column to datetime
+merged_df['Date'] = pd.to_datetime(merged_df['Date'])
+
+# Extract the month name from the 'Date' column
+merged_df['Month'] = merged_df['Date'].dt.month_name()
+
+# Create a Plotly Express box plot
+fig_month = px.box(merged_df, x='Month', y='Consumption', boxmode='overlay',
+             category_orders={'Month': ['January', 'February', 'March', 'April', 'May', 'June',
+                                        'July', 'August', 'September', 'October', 'November', 'December']})
+
+fig_month.update_traces(marker_color='blue')
+
+fig_month.update_layout(
+    title='Distribution of Consumption by Month',
+    xaxis_title='Month',
+    plot_bgcolor='white',
+    width=1400,
+    height=500,
+    font=dict(size=16),
+    yaxis_title='Consumption'
+)
+
+
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
@@ -344,6 +370,9 @@ def analysis_page():
   st.plotly_chart(create_season_boxplot(df_summer, 'Summer', 'blue'))
   st.plotly_chart(create_season_boxplot(df_autumn, 'Autumn', 'green'))
   st.plotly_chart(create_season_boxplot(df_winter, 'Winter', 'orange'))
+  st.subheader("📑 Consumption Distribution by Season")
+  st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
+  st.plotly_chart(fig_month)
   
 
 
