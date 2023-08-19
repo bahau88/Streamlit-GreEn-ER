@@ -296,52 +296,49 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     data = merged_df2.copy()
     data.index.names = ['Datetime']
 
+    # Prepare selected variables
+    selected_variables = ['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility']
+    selected_variables = [var for var in selected_variables if var in variables]
+
     # Split the data into input (X) and output (Y) variables
-    X = data[['Number of Room', 'Dayindex', 'Occupants', 'Temperature', 'Cloudcover', 'Visibility']].values
-    #X = data[['Temperature', 'Dayindex' , 'Cloudcover', 'Visibility', 'Solarradiation']].values
+    X = data[selected_variables].values
     Y = data['Consumption'].values
-    
+
     # Normalize the input data
     X_mean = np.mean(X, axis=0)
     X_std = np.std(X, axis=0)
     X = (X - X_mean) / X_std
-    
-    # Reshape input data for LSTM
-    X = X.reshape(X.shape[0], 1, X.shape[1])
-    
-    # Split the data into training, validation, and testing sets
-    train_X, temp_X, train_Y, temp_Y = train_test_split(X, Y, test_size=0.2, random_state=42)
-    val_X, test_X, val_Y, test_Y = train_test_split(temp_X, temp_Y, test_size=0.5, random_state=42)
-    
+
     # Define the model
     model = Sequential()
-    model.add(LSTM(12, input_shape=(1, X.shape[2]), activation='relu'))
+    model.add(Dense(12, input_dim=X.shape[1], activation='relu'))
     model.add(Dense(8, activation='relu'))
     model.add(Dense(1, activation='linear'))
-    
-    # Compile the model
     model.compile(loss='mean_squared_error', optimizer='adam')
-    
-    # Train the model and store the history object
-    history = model.fit(train_X, train_Y, epochs=50, batch_size=10, verbose=2, validation_data=(val_X, val_Y), shuffle=False)
-  
-    
+
+    # Split the data into training and validation sets
+    train_X = X[:-24]
+    train_Y = Y[:-24]
+    val_X = X[-24:]
+    val_Y = Y[-24:]
+
+    # Train the model
+    history = model.fit(train_X, train_Y, epochs=num_epochs, batch_size=batch_size, verbose=2, validation_data=(val_X, val_Y))
+
     # Generate the list of dates and hours to predict
     last_datetime = data.index.max()
     next_day = last_datetime + pd.DateOffset(hours=1)
     datetime_range = pd.date_range(next_day, periods=num_hours, freq='H')
     selected_datetimes = [str(d) for d in datetime_range]
-    
-    # Make predictions for the selected dates and hours
-    input_data = np.zeros((num_hours, X.shape[2]))
-    numberofroom_arr = [0, 0, 0, 0, 0, 0, 0, 0, 21, 21, 21, 21, 5, 25, 25, 21, 19, 11, 2, 2, 0, 0, 0, 0]  # input values for number of rooms
-    events_arr =       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
-    dayindex_arr = [0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635,  0.635,  0.635,  0.635, 0.635]  # input values for day index
-    occupants_arr = [0, 0, 0, 0, 0, 0, 0, 0, 923, 923, 923, 923, 633, 1068, 1068, 964, 908, 791, 371, 371, 0, 0, 0, 0]  # input values for number of occupants
-    temperature_arr = [7.6, 6.8, 5.9, 4.6, 4.4, 4.2, 3.7, 3.1, 5.2, 9.2, 11.6, 13.1, 14.9, 16.9, 18, 19.4, 20.8, 21.1, 21, 18.5, 17.5, 15.6, 14, 12.8]  # input values for number of temperature
-    cloudcover_arr = [60, 40, 0.7, 0, 80, 80, 60, 80, 50, 50, 60 , 50, 60, 60, 80, 80, 90, 100, 94.3, 95.7, 90, 96.3, 98.9, 96.3]  # input values for number of cloudcover
-    visibility_arr = [33.2, 25.2, 24.4, 19.7, 16.5, 20, 16.2, 14.9, 15.3, 23.9, 23.9, 24.5, 17.6, 29.9, 33.1, 19.2, 33.2, 30.7, 34.8, 38.2, 28.8, 26.3, 38.2, 34.9]  # input values for number of visibility
-    solarradiation_arr = [0, 0, 0, 0, 0, 0, 0, 19, 190, 373, 589, 744, 856, 896, 930, 803, 780, 587, 153, 113, 25, 14, 0, 0]  # input values for number of solarradiation
+
+    # Prepare input data for prediction
+    input_data = np.zeros((num_hours, X.shape[1]))
+    numberofroom_arr = [0, 0, 0, 0, 0, 0, 0, 0, 21, 21, 21, 21, 5, 25, 25, 21, 19, 11, 2, 2, 0, 0, 0, 0]
+    dayindex_arr = [0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635, 0.635,  0.635,  0.635,  0.635, 0.635]
+    occupants_arr = [0, 0, 0, 0, 0, 0, 0, 0, 923, 923, 923, 923, 633, 1068, 1068, 964, 908, 791, 371, 371, 0, 0, 0, 0]
+    temperature_arr = [7.6, 6.8, 5.9, 4.6, 4.4, 4.2, 3.7, 3.1, 5.2, 9.2, 11.6, 13.1, 14.9, 16.9, 18, 19.4, 20.8, 21.1, 21, 18.5, 17.5, 15.6, 14, 12.8]
+    cloudcover_arr = [60, 40, 0.7, 0, 80, 80, 60, 80, 50, 50, 60 , 50, 60, 60, 80, 80, 90, 100, 94.3, 95.7, 90, 96.3, 98.9, 96.3]
+    visibility_arr = [33.2, 25.2, 24.4, 19.7, 16.5, 20, 16.2, 14.9, 15.3, 23.9, 23.9, 24.5, 17.6, 29.9, 33.1, 19.2, 33.2, 30.7, 34.8, 38.2, 28.8, 26.3, 38.2, 34.9]
 
     for i in range(num_hours):
         numberofroom = numberofroom_arr[i]
@@ -413,7 +410,7 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     st.plotly_chart(fig_tvl)
 
 
-def plot_predictions2(data, Y, train_predictions):
+def plot_predictions(data, Y, train_predictions):
     fig_tp = go.Figure()
     fig_tp.add_trace(go.Scatter(x=data.index, y=Y, name='True Consumption', line_color='orange'))
     fig_tp.add_trace(go.Scatter(x=data.index, y=train_predictions.flatten(), name='Predicted Consumption', line_color='red'))
