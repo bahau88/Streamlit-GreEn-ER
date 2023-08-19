@@ -309,12 +309,14 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     X_std = np.std(X, axis=0)
     X = (X - X_mean) / X_std
 
+    # Reshape input data for LSTM
+    X = X.reshape(X.shape[0], 1, X.shape[1])  
+
     # Define the model
     model = Sequential()
-    model.add(Dense(12, input_dim=X.shape[1], activation='relu'))
+    model.add(LSTM(12, input_shape=(1, X.shape[2]), activation='relu'))
     model.add(Dense(8, activation='relu'))
     model.add(Dense(1, activation='linear'))
-    model.compile(loss='mean_squared_error', optimizer='adam')
 
     # Split the data into training and validation sets
     train_X = X[:-24]
@@ -412,7 +414,7 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
 
 def plot_predictions2(data, Y, train_predictions):
     fig_tp = go.Figure()
-    fig_tp.add_trace(go.Scatter(x=data.index, y=Y, name='True Consumption', line_color='blue'))
+    fig_tp.add_trace(go.Scatter(x=data.index, y=Y, name='True Consumption', line_color='orange'))
     fig_tp.add_trace(go.Scatter(x=data.index, y=train_predictions.flatten(), name='Predicted Consumption', line_color='green'))
     fig_tp.update_layout(
         title='True vs. Predicted Consumption for Training Data',
