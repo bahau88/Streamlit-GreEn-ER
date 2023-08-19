@@ -412,8 +412,8 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
 
 def plot_predictions2(data, Y, train_predictions):
     fig_tp = go.Figure()
-    fig_tp.add_trace(go.Scatter(x=data.index, y=Y, name='True Consumption', line_color='orange'))
-    fig_tp.add_trace(go.Scatter(x=data.index, y=train_predictions.flatten(), name='Predicted Consumption', line_color='red'))
+    fig_tp.add_trace(go.Scatter(x=data.index, y=Y, name='True Consumption', line_color='blue'))
+    fig_tp.add_trace(go.Scatter(x=data.index, y=train_predictions.flatten(), name='Predicted Consumption', line_color='green'))
     fig_tp.update_layout(
         title='True vs. Predicted Consumption for Training Data',
         plot_bgcolor='white',
