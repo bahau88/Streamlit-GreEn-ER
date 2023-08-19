@@ -301,7 +301,7 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     data.index.names = ['Datetime']
     
     # Split the data into input (X) and output (Y) variables
-    X = data[['Number of Room', 'Events', 'Occupants', 'Temperature', 'Dayindex', 'Cloudcover', 'Visibility', 'Solarradiation']].values
+    X = data[['Number of Room', 'Occupants', 'Temperature', 'Dayindex', 'Cloudcover', 'Visibility', ]].values
     #X = data[['Temperature', 'Dayindex' , 'Cloudcover', 'Visibility', 'Solarradiation']].values
     Y = data['Consumption'].values
     
