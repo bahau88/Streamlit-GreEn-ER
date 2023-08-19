@@ -618,7 +618,6 @@ def regressions_page():
   st.subheader("📑 Consumption Distribution by Season")
   st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
   st.plotly_chart(fig_regression)
-  
 
 # Page 3 - Feature importance page
 def importance_page():
