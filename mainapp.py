@@ -153,7 +153,7 @@ line8 = slope8 * x8 + intercept8
 corr8 = f"Correlation: {r_value8:.2f}"
 
 # Create a 3x3 matrix of subplots
-fig_regression = make_subplots(rows=3, cols=3, subplot_titles=("Consumption vs Number of Room", "Consumption vs Events", "Consumption vs Day Index",
+fig_regression = make_subplots(rows=8, cols=1, subplot_titles=("Consumption vs Number of Room", "Consumption vs Events", "Consumption vs Day Index",
                                                     "Consumption vs Occupants", "Consumption vs Temperature", "Consumption vs Cloud Cover",
                                                     "Consumption vs Visibility", "Consumption vs Solar Radiation",))
 
@@ -167,13 +167,13 @@ def plot_and_annotate(fig_regression, x, y, line, corr, row, col, xaxis_title, y
 
 # Plot and annotate for each subplot
 plot_and_annotate(fig_regression, x1, y1, line1, corr1, 1, 1, "Consumption", "Number of Room")
-plot_and_annotate(fig_regression, x2, y2, line2, corr2, 1, 2, "Consumption", "Events")
-plot_and_annotate(fig_regression, x3, y3, line3, corr3, 1, 3, "Consumption", "Dayindex")
-plot_and_annotate(fig_regression, x4, y4, line4, corr4, 2, 1, "Consumption", "Occupants")
-plot_and_annotate(fig_regression, x5, y5, line5, corr5, 2, 2, "Consumption", "Temperature")
-plot_and_annotate(fig_regression, x6, y6, line6, corr6, 2, 3, "Consumption", "Cloudcover")
-plot_and_annotate(fig_regression, x7, y7, line7, corr7, 3, 1, "Consumption", "Visibility")
-plot_and_annotate(fig_regression, x8, y8, line8, corr8, 3, 2, "Consumption", "Solar Radiation")
+plot_and_annotate(fig_regression, x2, y2, line2, corr2, 2, 1, "Consumption", "Events")
+plot_and_annotate(fig_regression, x3, y3, line3, corr3, 3, 1, "Consumption", "Dayindex")
+plot_and_annotate(fig_regression, x4, y4, line4, corr4, 4, 1, "Consumption", "Occupants")
+plot_and_annotate(fig_regression, x5, y5, line5, corr5, 5, 1, "Consumption", "Temperature")
+plot_and_annotate(fig_regression, x6, y6, line6, corr6, 6, 1, "Consumption", "Cloudcover")
+plot_and_annotate(fig_regression, x7, y7, line7, corr7, 7, 1, "Consumption", "Visibility")
+plot_and_annotate(fig_regression, x8, y8, line8, corr8, 8, 1, "Consumption", "Solar Radiation")
 
 
 # Update layout and axes properties
