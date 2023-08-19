@@ -327,6 +327,9 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     # Train the model
     history = model.fit(train_X, train_Y, epochs=num_epochs, batch_size=batch_size, verbose=2, validation_data=(val_X, val_Y))
 
+    # Compile the model
+    model.compile(loss='mean_squared_error', optimizer='adam')
+
     # Generate the list of dates and hours to predict
     last_datetime = data.index.max()
     next_day = last_datetime + pd.DateOffset(hours=1)
