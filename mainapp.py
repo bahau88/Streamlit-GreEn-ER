@@ -623,11 +623,11 @@ def main():
         [
             ("Data Visualization", "📊 "),
             ("Consumption Analysis", "📑"),
-            ("Regression", "📑"),
-            ("Features Importance", "📑"),
+            ("Linear Regression", "📐"),
+            ("Features Importance", "⭐"),
             ("Electricity Forecast FNN", "📈"),
             ("Electricity Forecast LSTM", "📈"),
-            ("Data Sources", "📈"),
+            ("Data Sources", "🔒"),
             ("About", "🚀"),
             ("Contact", "📫")
         ],
@@ -639,7 +639,7 @@ def main():
         visualization_page()
     elif selected_page[0] == "Consumption Analysis":
         analysis_page() 
-    elif selected_page[0] == "Regression":
+    elif selected_page[0] == "Linear Regression":
         regression_page() 
     elif selected_page[0] == "Features Importance":
         importance_page()
