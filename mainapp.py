@@ -308,6 +308,12 @@ def predict_consumption2(num_hours, num_epochs, batch_size, variables):
     
     # Reshape input data for LSTM
     X = X.reshape(X.shape[0], 1, X.shape[1])
+
+    # Define the model
+    model = Sequential()
+    model.add(LSTM(12, input_shape=(1, X.shape[2]), activation='relu'))
+    model.add(Dense(8, activation='relu'))
+    model.add(Dense(1, activation='linear'))
     
     # Compile the model
     model.compile(loss='mean_squared_error', optimizer='adam')
