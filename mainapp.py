@@ -61,6 +61,23 @@ df_boxplot = merged_df.copy()
 df_boxplot = df_boxplot.set_index('Date')
 df_boxplot.index = pd.to_datetime(df_boxplot.index)
 
+# Create dataframes for each season
+df_spring = pd.concat([df_boxplot[(df_boxplot.index >= '2021-03-01') & (df_boxplot.index <= '2021-05-31')],
+                       df_boxplot[(df_boxplot.index >= '2022-03-01') & (df_boxplot.index <= '2022-05-31')],
+                       df_boxplot[(df_boxplot.index >= '2023-03-01') & (df_boxplot.index <= '2023-04-26')]])
+
+df_summer = pd.concat([df_boxplot[(df_boxplot.index >= '2020-08-24') & (df_boxplot.index <= '2020-08-31')],
+                       df_boxplot[(df_boxplot.index >= '2021-06-01') & (df_boxplot.index <= '2021-08-31')],
+                       df_boxplot[(df_boxplot.index >= '2022-06-01') & (df_boxplot.index <= '2022-08-31')]])
+
+df_autumn = pd.concat([df_boxplot[(df_boxplot.index >= '2020-09-01') & (df_boxplot.index <= '2020-11-30')],
+                       df_boxplot[(df_boxplot.index >= '2021-09-01') & (df_boxplot.index <= '2021-11-30')],
+                       df_boxplot[(df_boxplot.index >= '2022-09-01') & (df_boxplot.index <= '2022-11-30')]])
+
+df_winter = pd.concat([df_boxplot[(df_boxplot.index >= '2020-12-01') & (df_boxplot.index <= '2020-12-31')],
+                       df_boxplot[(df_boxplot.index >= '2021-12-01') & (df_boxplot.index <= '2021-12-31')],
+                       df_boxplot[(df_boxplot.index >= '2022-12-01') & (df_boxplot.index <= '2022-12-31')]])
+
 # Create subplots for each season
 fig_boxplot = sp.make_subplots(rows=1, cols=4, subplot_titles=('Spring', 'Summer', 'Autumn', 'Winter'),
                               horizontal_spacing=0.05)
@@ -93,6 +110,7 @@ fig_boxplot.update_layout(
     boxmode='group',
     showlegend=False
 )
+
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
