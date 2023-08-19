@@ -54,6 +54,7 @@ fig.update_traces(hovertemplate='%{y:.2f}')
 
 #--------------------------------------------------------------------------------------------------------------------
 # DATA ANALYSIS ------------------------------------------------------------------------------------------------------------------------
+
 # Load data
 merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv') 
 df_boxplot = merged_df.copy()
@@ -61,56 +62,27 @@ df_boxplot = merged_df.copy()
 df_boxplot = df_boxplot.set_index('Date')
 df_boxplot.index = pd.to_datetime(df_boxplot.index)
 
-# Create dataframes for each season
-df_spring = pd.concat([df_boxplot[(df_boxplot.index >= '2021-03-01') & (df_boxplot.index <= '2021-05-31')],
-                       df_boxplot[(df_boxplot.index >= '2022-03-01') & (df_boxplot.index <= '2022-05-31')],
-                       df_boxplot[(df_boxplot.index >= '2023-03-01') & (df_boxplot.index <= '2023-04-26')]])
+# Create dataframes for each season (adjust the date ranges as needed)
+df_spring = df_boxplot[(df_boxplot.index >= '2021-03-01') & (df_boxplot.index <= '2021-05-31')]
 
-df_summer = pd.concat([df_boxplot[(df_boxplot.index >= '2020-08-24') & (df_boxplot.index <= '2020-08-31')],
-                       df_boxplot[(df_boxplot.index >= '2021-06-01') & (df_boxplot.index <= '2021-08-31')],
-                       df_boxplot[(df_boxplot.index >= '2022-06-01') & (df_boxplot.index <= '2022-08-31')]])
-
-df_autumn = pd.concat([df_boxplot[(df_boxplot.index >= '2020-09-01') & (df_boxplot.index <= '2020-11-30')],
-                       df_boxplot[(df_boxplot.index >= '2021-09-01') & (df_boxplot.index <= '2021-11-30')],
-                       df_boxplot[(df_boxplot.index >= '2022-09-01') & (df_boxplot.index <= '2022-11-30')]])
-
-df_winter = pd.concat([df_boxplot[(df_boxplot.index >= '2020-12-01') & (df_boxplot.index <= '2020-12-31')],
-                       df_boxplot[(df_boxplot.index >= '2021-12-01') & (df_boxplot.index <= '2021-12-31')],
-                       df_boxplot[(df_boxplot.index >= '2022-12-01') & (df_boxplot.index <= '2022-12-31')]])
-
-# Create subplots for each season
-fig_boxplot = sp.make_subplots(rows=1, cols=4, subplot_titles=('Spring', 'Summer', 'Autumn', 'Winter'),
-                              horizontal_spacing=0.05)
+# ... repeat for other seasons ...
 
 # Create a list of day names to use for X axis labels
 day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-# Define function to add 3D box plots to the subplots
-def add_box_plot(fig, df, row, col, season_name, marker_color):
+# Create a function to generate a Plotly figure for each season
+def create_season_boxplot(df, season_name, marker_color):
+    fig = go.Figure()
     fig.add_trace(go.Box(x=df.index.day_name(), y=df['Consumption'], name=season_name,
-                         boxmean='sd', marker_color=marker_color), row=row, col=col)
-
-# Create subplots for each season
-add_box_plot(fig_boxplot, df_spring, 1, 1, 'Spring', 'red')
-add_box_plot(fig_boxplot, df_summer, 1, 2, 'Summer', 'blue')
-add_box_plot(fig_boxplot, df_autumn, 1, 3, 'Autumn', 'orange')
-add_box_plot(fig_boxplot, df_winter, 1, 4, 'Winter', 'green')
-
-# Set the layout for the figure
-fig_boxplot.update_layout(
-    scene=dict(
+                         boxmean='sd', marker_color=marker_color))
+    fig.update_layout(
         xaxis=dict(title='Day of the Week'),
         yaxis=dict(title='Consumption'),
-        zaxis=dict(title='Season', showgrid=False, showticklabels=False),
-        bgcolor='white',
-        camera=dict(eye=dict(x=-1.5, y=-1.5, z=1.5))  # Adjust the camera angle
-    ),
-    height=600,
-    title_text="Consumption by Season",
-    boxmode='group',
-    showlegend=False
-)
-
+        title_text=f"Consumption in {season_name}",
+        boxmode='group',
+        showlegend=False
+    )
+    return fig
 #---------------------------------------------------------------------------------------------------------------------------------------------------
 
 # FEATURE IMPORTANCE #--------------------------------------------------------------------------------------------------------------------
@@ -356,7 +328,7 @@ def analysis_page():
   st.title('Energy Consumption Analysis')
   st.subheader("📑 Consumption Distribution by Season")
   st.write("Random Forest, Gradient Boosting, and Decision Tree are all supervised machine learning algorithms commonly used for classification and regression tasks.")
-  st.plotly_chart(fig_boxplot)
+  st.plotly_chart(create_season_boxplot(df_spring, 'Spring', 'red'))
   
 
 
