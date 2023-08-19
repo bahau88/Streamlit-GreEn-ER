@@ -104,10 +104,7 @@ merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy
 # Select the columns to be plotted
 x1 = merged_df['Consumption']
 y1 = merged_df['Number of Room']
-x2 = merged_df['Consumption']
-y2 = merged_df['Events']
-x3 = merged_df['Consumption']
-y3 = merged_df['Dayindex']
+
 x4 = merged_df['Consumption']
 y4 = merged_df['Occupants']
 x5 = merged_df['Consumption']
@@ -124,13 +121,6 @@ slope1, intercept1, r_value1, p_value1, std_err1 = stats.linregress(x1, y1)
 line1 = slope1 * x1 + intercept1
 corr1 = f"Correlation: {r_value1:.2f}"
 
-slope2, intercept2, r_value2, p_value2, std_err2 = stats.linregress(x2, y2)
-line2 = slope2 * x2 + intercept2
-corr2 = f"Correlation: {r_value2:.2f}"
-
-slope3, intercept3, r_value3, p_value3, std_err3 = stats.linregress(x3, y3)
-line3 = slope3 * x3 + intercept3
-corr3 = f"Correlation: {r_value3:.2f}"
 
 slope4, intercept4, r_value4, p_value4, std_err4 = stats.linregress(x4, y4)
 line4 = slope4 * x4 + intercept4
@@ -167,8 +157,7 @@ def plot_and_annotate(fig_regression, x, y, line, corr, row, col, xaxis_title, y
 
 # Plot and annotate for each subplot
 plot_and_annotate(fig_regression, x1, y1, line1, corr1, 1, 1, "Consumption", "Number of Room")
-plot_and_annotate(fig_regression, x2, y2, line2, corr2, 1, 2, "Consumption", "Events")
-plot_and_annotate(fig_regression, x3, y3, line3, corr3, 1, 3, "Consumption", "Dayindex")
+
 plot_and_annotate(fig_regression, x4, y4, line4, corr4, 2, 1, "Consumption", "Occupants")
 plot_and_annotate(fig_regression, x5, y5, line5, corr5, 2, 2, "Consumption", "Temperature")
 plot_and_annotate(fig_regression, x6, y6, line6, corr6, 2, 3, "Consumption", "Cloudcover")
