@@ -111,8 +111,6 @@ def create_season_boxplot(df, season_name, marker_color):
 
 # REGRESSION ------------------------------------------------------------------------------------------------------------------------
 
-# Load data
-# Load data
 merged_df = pd.read_csv('https://raw.githubusercontent.com/bahau88/G2Elab-Energy-Building-/main/dataset/combined_data_green-er_2020_2023.csv') 
 
 # Select the columns to be plotted
@@ -722,6 +720,7 @@ def main():
         [
             ("Data Visualization", "📊 "),
             ("Consumption Analysis", "📑"),
+            ("Regression", "📑"),
             ("Features Importance", "📑"),
             ("Electricity Forecast FNN", "📈"),
             ("Electricity Forecast LSTM", "📈"),
